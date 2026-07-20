@@ -17,8 +17,8 @@
 
 | ファイル | 内容 |
 |---|---|
-| [`sundog-exam1/quality-evaluation.html`](./sundog-exam1/quality-evaluation.html) | 問題集の品質評価（公式 Blueprint との整合性・技術的正確性） |
-| [`sundog-exam1/weakness-analysis.html`](./sundog-exam1/weakness-analysis.html) | 自身の苦手分野の分析と優先復習案 |
+| [`sundog-exam1/quality-evaluation.html`](./sundog-exam1/quality-evaluation.html) / [.pdf](./sundog-exam1/quality-evaluation.pdf) | 問題集の品質評価（公式 Blueprint との整合性・技術的正確性） |
+| [`sundog-exam1/weakness-analysis.html`](./sundog-exam1/weakness-analysis.html) / [.pdf](./sundog-exam1/weakness-analysis.pdf) | 自身の苦手分野の分析と優先復習案 |
 
 ## 使い方
 
