@@ -32,7 +32,6 @@
   .p2{background:rgba(74,222,128,.16);color:var(--p2)}
   .p-info{background:rgba(96,165,250,.16);color:var(--info)}
   .p-sub{background:#2a2f3d;color:var(--sub)}
-  .p-ok{background:rgba(74,222,128,.16);color:var(--ok)}
   code{background:#0a0c12;border:1px solid var(--border);padding:1px 6px;border-radius:4px;font-size:12.5px;color:var(--accent);font-family:"SF Mono",Menlo,Consolas,monospace}
   .qcard{background:var(--card);border:1px solid var(--border);border-left:4px solid var(--bad);border-radius:10px;padding:16px 20px;margin-bottom:14px}
   .qcard.silent{border-left-color:var(--warn)}
@@ -76,6 +75,7 @@
   .tag-d{display:inline-block;font-size:11px;padding:1px 6px;border-radius:4px;background:var(--card2);border:1px solid var(--border);margin:2px}
   .delta-bad{color:var(--bad);font-weight:700}
   .delta-ok{color:var(--ok);font-weight:700}
+  .pool{color:var(--accent);font-weight:700}
   .footer{text-align:center;color:var(--sub);font-size:12px;margin-top:40px;border-top:1px solid var(--border);padding-top:18px}
   /* === print / PDF === */
   @media print{
@@ -95,49 +95,50 @@
 
 <header class="hero">
   <h1>Sundog Exam2 分析 ＋ Exam1/Exam2 統合復習 <span class="tag">CCDV-F</span></h1>
-  <div class="sub">Exam2: 83%合格(44/53) · 誤答8 · Silent miss4 · Exam1(81%)と統合 · 作成 2026-07-20 · 姉妹: <a href="../sundog-exam1/weakness-analysis.html">Exam1弱点分析</a></div>
+  <div class="sub">Exam1(81%)とExam2(83%)は<b>復習せず連続受験＝独立サンプル2つ</b>。領域別の真の実力は<b>2試験をプール（106問）</b>して推定 · 作成 2026-07-20 · 姉妹: <a href="../sundog-exam1/weakness-analysis.html">Exam1弱点分析</a></div>
 </header>
 
-<!-- サマリ: 3つの真因（Exam2版） -->
+<!-- サマリ -->
 <div class="card">
-  <h2 style="margin-top:0">Exam2 サマリ — 弱点は「振り子」した</h2>
+  <h2 style="margin-top:0">サマリ — 「克服」ではなく「サンプル追加」</h2>
   <div class="grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px">
     <div style="background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:16px">
-      <div style="font-size:13px;color:var(--bad);font-weight:700">① 最大弱点（Exam1→急落）</div>
-      <div style="font-size:24px;font-weight:800;margin:6px 0">D1 Agents <span style="font-size:14px;color:var(--bad)">50%</span></div>
-      <div class="small">Exam1 88%→<b>50%に半減</b>。Agent SDK・workflow patterns・Workflow tool の<b>選別</b>で4問失点。配点14.7%でRO急所。</div>
+      <div style="font-size:13px;color:var(--bad);font-weight:700">① 最大弱点（プール確定）</div>
+      <div style="font-size:24px;font-weight:800;margin:6px 0">D1 Agents <span style="font-size:14px;color:var(--bad)">プール69%</span></div>
+      <div class="small">Exam1 88%・Exam2 50%。両サンプル通じて<b>5誤/16問</b>。Agent SDK・workflow patterns・Workflow tool の選別。配点14.7%で急所。</div>
     </div>
     <div style="background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:16px">
-      <div style="font-size:13px;color:var(--bad);font-weight:700">② 得意→崩落</div>
-      <div style="font-size:24px;font-weight:800;margin:6px 0">D6 Prompt <span style="font-size:14px;color:var(--warn)">67%</span></div>
-      <div class="small">Exam1 100%→67%。context editing・Structured Outputs の<b>境界知識</b>が浅かった。prefill≠caching≠context editing。</div>
+      <div style="font-size:13px;color:var(--bad);font-weight:700">② Exam1弱点は未解決のまま</div>
+      <div style="font-size:24px;font-weight:800;margin:6px 0">D8 Tools/MCPs <span style="font-size:14px;color:var(--warn)">プール75%</span></div>
+      <div class="small">Exam1 50%(3誤)→Exam2 100%(0誤) だが<b>復習していない</b>ので「克服」ではない。Exam2 で出題されなかっただけ。<b>Exam1 の3誤（MCP原語）は未整理</b>。</div>
     </div>
     <div style="background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:16px">
-      <div style="font-size:13px;color:var(--ok);font-weight:700">③ 克服（Exam1弱点）</div>
-      <div style="font-size:24px;font-weight:800;margin:6px 0">D8/D5/D7 <span style="font-size:14px;color:var(--ok)">100%</span></div>
-      <div class="small">Exam1 の D8(50%)/D5(78%)/D7(75%) は<b>全て100%に克服</b>。ツール原語・新モデル機構は定着。→ 弱点が<b>別領域に移動</b>。</div>
+      <div style="font-size:13px;color:var(--warn);font-weight:700">③ 全18誤答を潰す</div>
+      <div style="font-size:24px;font-weight:800;margin:6px 0">Exam1 10 + Exam2 8 <span style="font-size:14px;color:var(--warn)">= 18</span></div>
+      <div class="small">Exam2 で出題されなかった＝解決、ではない。<b>両試験の誤答すべてが未復習の知識ギャップ</b>。プール正答率82%（87/106）。</div>
     </div>
   </div>
-  <div class="bad-note" style="margin-top:14px"><b>核心: 弱点の振り子現象。</b> Exam1 の弱点(D8/D5/D7)を意識して臨んだ結果、今度は <b>D1/D6/D3（Exam1で得意）が崩落</b>。部分的復習では弱点が移動するだけ。<b>106問全体を統合し、トピック単位で根本知識を固める</b>必要がある — これが本HTMLの目的。</div>
+  <div class="bad-note" style="margin-top:14px"><b>核心: サンプル間のブレを「成績変化」と読まない。</b> Exam1→Exam2 の間に復習していないため、D8(50%→100%) や D1(88%→50%) は<b>学習効果ではなく標本誤差</b>。領域別の真の実力は<b>2試験をプール</b>して推定する（n=最大34）。1試験の結果（n=6程度）で「克服」「悪化」を判断してはいけない — 本番（53問1サンプル）でも同じブレが起きる。</div>
 </div>
 
-<!-- Part A: 領域別成績＋Exam1比較 -->
-<h2>Part A — Exam2 領域別成績 ＋ Exam1 比較</h2>
+<!-- Part A: 領域別成績（プール主指標） -->
+<h2>Part A — 領域別成績（2試験プールが主指標）</h2>
 <div class="card">
+  <p class="small"><b>「プール」列＝Exam1+Exam2 の合算正答率（真の実力の推定値・主指標）</b>。Exam1/Exam2 個別は各1サンプル（n=1〜17）でブレが大きい。優先度は<b>プール正答率 × 配点</b>で決める。</p>
   <table>
-    <thead><tr><th>Domain</th><th class="num">配点</th><th class="num">題数</th><th class="num">Exam2</th><th class="num">Exam1</th><th class="num">変化</th><th>Exam2 誤答</th><th>診断</th></tr></thead>
+    <thead><tr><th>Domain</th><th class="num">配点</th><th class="num">プール題</th><th class="num">プール正答率<br><span class="small">（主指標）</span></th><th class="num">Exam1</th><th class="num">Exam2</th><th>Exam2 誤答</th><th>優先</th></tr></thead>
     <tbody>
-      <tr><td>D1 Agents &amp; Workflows</td><td class="num">14.7%</td><td class="num">8</td><td class="num delta-bad">50%</td><td class="num">88%</td><td class="num delta-bad">⬇ -38</td><td class="num">6,12,13,44</td><td><span class="pill p0">P0</span> 知識が浅い</td></tr>
-      <tr><td>D2 Applications &amp; Integration</td><td class="num">33.1%</td><td class="num">17</td><td class="num">88%</td><td class="num">82%</td><td class="num delta-ok">⬆ +6</td><td class="num">47 (+1skip)</td><td><span class="pill p1">P1</span> 安定・迷い多い</td></tr>
-      <tr><td>D3 Claude Code</td><td class="num">3.1%</td><td class="num">2</td><td class="num delta-bad">50%</td><td class="num">100%</td><td class="num delta-bad">⬇ -50</td><td class="num">20</td><td><span class="pill p2">P2</span> 題数少</td></tr>
-      <tr><td>D4 Eval, Testing</td><td class="num">2.6%</td><td class="num">1</td><td class="num delta-ok">100%</td><td class="num">100%</td><td class="num">→</td><td class="num">—</td><td><span class="pill p2">維持</span></td></tr>
-      <tr><td>D5 Model Selection</td><td class="num">16.8%</td><td class="num">9</td><td class="num delta-ok">100%</td><td class="num">78%</td><td class="num delta-ok">⬆ 克服</td><td class="num">—</td><td><span class="pill p1">P1</span> 確信不足</td></tr>
-      <tr><td>D6 Prompt &amp; Context</td><td class="num">11.0%</td><td class="num">6</td><td class="num delta-bad">67%</td><td class="num">100%</td><td class="num delta-bad">⬇ -33</td><td class="num">18,51</td><td><span class="pill p1">P1</span> 境界知識</td></tr>
-      <tr><td>D7 Security &amp; Safety</td><td class="num">8.1%</td><td class="num">4</td><td class="num delta-ok">100%</td><td class="num">75%</td><td class="num delta-ok">⬆ 克服</td><td class="num">—</td><td><span class="pill p2">維持</span></td></tr>
-      <tr><td>D8 Tools &amp; MCPs</td><td class="num">10.6%</td><td class="num">6</td><td class="num delta-ok">100%</td><td class="num">50%</td><td class="num delta-ok">⬆ 克服</td><td class="num">—</td><td><span class="pill p1">P1</span> 要メンテ</td></tr>
+      <tr><td>D1 Agents &amp; Workflows</td><td class="num">14.7%</td><td class="num">16</td><td class="num pool">69%</td><td class="num">88%</td><td class="num delta-bad">50%</td><td class="num">6,12,13,44</td><td><span class="pill p0">P0</span></td></tr>
+      <tr><td>D8 Tools &amp; MCPs</td><td class="num">10.6%</td><td class="num">12</td><td class="num pool">75%</td><td class="num delta-bad">50%</td><td class="num">100%</td><td class="num">—</td><td><span class="pill p1">P1</span></td></tr>
+      <tr><td>D3 Claude Code</td><td class="num">3.1%</td><td class="num">4</td><td class="num pool">75%</td><td class="num">100%</td><td class="num delta-bad">50%</td><td class="num">20</td><td><span class="pill p2">P2</span></td></tr>
+      <tr><td>D6 Prompt &amp; Context</td><td class="num">11.0%</td><td class="num">12</td><td class="num pool">83%</td><td class="num">100%</td><td class="num delta-bad">67%</td><td class="num">18,51</td><td><span class="pill p1">P1</span></td></tr>
+      <tr><td>D2 Applications &amp; Integration</td><td class="num">33.1%</td><td class="num">34</td><td class="num pool">85%</td><td class="num">82%</td><td class="num">88%</td><td class="num">47 (+skip)</td><td><span class="pill p1">P1</span></td></tr>
+      <tr><td>D7 Security &amp; Safety</td><td class="num">8.1%</td><td class="num">8</td><td class="num pool">88%</td><td class="num">75%</td><td class="num">100%</td><td class="num">—</td><td><span class="pill p2">P2</span></td></tr>
+      <tr><td>D5 Model Selection</td><td class="num">16.8%</td><td class="num">18</td><td class="num pool">89%</td><td class="num">78%</td><td class="num">100%</td><td class="num">—</td><td><span class="pill p1">P1</span></td></tr>
+      <tr><td>D4 Eval, Testing</td><td class="num">2.6%</td><td class="num">2</td><td class="num delta-ok">100%</td><td class="num">100%</td><td class="num">100%</td><td class="num">—</td><td><span class="pill p2">維持</span></td></tr>
     </tbody>
   </table>
-  <div class="note"><b>Exam2の分布:</b> 誤答8 = D1(4) + D6(2) + D3(1) + D2(1)。D1 Agents に<b>半数が集中</b>。Exam1 の誤答分布(D8:3, D2:3, D5:2, D7:1, D1:1)とは<b>ほぼ逆転</b>。+ skipped 1（D2、時間切れ）。</div>
+  <div class="warn-note"><b>「プール」で見る真の弱点:</b> Exam2 単独だと D8/D5/D7 が100%だが、プールすると <b>D8=75%・D5=89%・D7=88%</b>。Exam1 で間違えた知識（MCP原語・<code>effort</code>/課金・injection/trust）は<b>復習していないので未解決</b>。本番で再び出題されれば同じ問違いをする可能性が高い。→ Part D で <b>D8 を P1 に擬上げ</b>（前回の「克服→メンテ」判断は撤回）。</div>
 </div>
 
 <!-- Part B: 誤答8問の詳細 -->
@@ -146,7 +147,6 @@
 
 <h3>分類 ① Agent SDK / agentic loop の選別（Q6, Q12）</h3>
 
-<!-- Q6 -->
 <div class="qcard silent">
   <div class="qhead"><span class="qnum">Q6</span><span class="pill p0">D1 Agents</span><span class="pill p-sub">単選</span><span class="pill p-info">Silent miss</span></div>
   <div class="small">ゲームスタジオのビルドチーム。内部デスクトップutility。ローカルcheckout を検査・編集・標準coding tools・UI に進捗stream・tool call 前に決定的検証。<b>tool 実行 loop は自前実装したくない</b>。</div>
@@ -156,7 +156,6 @@
   <div class="prep">M2 m2:734（3 wiring paths）・m2:1401（Agent SDK 定義）</div>
 </div>
 
-<!-- Q12 -->
 <div class="qcard silent">
   <div class="qhead"><span class="qnum">Q12</span><span class="pill p0">D1 Agents</span><span class="pill p-sub">単選</span><span class="pill p1">Caught</span></div>
   <div class="small">海事保険。TypeScript desktop app。ローカルcheckout・built-in coding tools・autonomous loop・UI stream。loop 構築回避 + <b>各 laptop への CC 別途インストール回避</b>。</div>
@@ -168,7 +167,6 @@
 
 <h3>分類 ② Workflow / orchestration pattern の選別（Q13, Q44）</h3>
 
-<!-- Q13 -->
 <div class="qcard silent">
   <div class="qhead"><span class="qnum">Q13</span><span class="pill p0">D1 Agents</span><span class="pill p-sub">単選</span><span class="pill p1">Caught</span></div>
   <div class="small">公選弁護人の e-discovery。各 case は<b>同じ intake memo</b> で終わる。中間作業は検査後<b>異なり得る</b>（timeline / 証人比較 / 不一致check / 索引）。worker 役割は事前既知。<b>open-ended より予測可能性</b>重視。</div>
@@ -178,7 +176,6 @@
   <div class="prep">M2 m2:1386 / M4 m4:617/631（orchestrator-worker・コスト）</div>
 </div>
 
-<!-- Q44 -->
 <div class="qcard silent">
   <div class="qhead"><span class="qnum">Q44</span><span class="pill p0">D1 Agents</span><span class="pill p-sub">単選</span><span class="pill p-info">Silent miss</span></div>
   <div class="small">臨床試験 data platform。各 migration で<b>60 の独立 check</b>・findings 比較・統合 plan。main 会話は coordination に集中・全検索結果/中間 transcript 蓄積回避。</div>
@@ -190,7 +187,6 @@
 
 <h3>分類 ③ Context 管理メカニズム（Q18）</h3>
 
-<!-- Q18 -->
 <div class="qcard silent">
   <div class="qhead"><span class="qnum">Q18</span><span class="pill p1">D6 Prompt &amp; Context</span><span class="pill p-sub">単選</span><span class="pill p1">Caught</span></div>
   <div class="small">医薬品安全監視。Claude triage agent が冗長 scanner logs を返す tool を呼ぶ。findings 抽出後・古い tool 出力は不要。ただし<b>完全 audit 履歴は自前 DB 保持</b>。client 側履歴を書き換えずに API で Claude の見える情報を減らしたい。</div>
@@ -202,7 +198,6 @@
 
 <h3>分類 ④ Claude Code 実行モード（Q20）</h3>
 
-<!-- Q20 -->
 <div class="qcard silent">
   <div class="qhead"><span class="qnum">Q20</span><span class="pill p2">D3 Claude Code</span><span class="pill p-sub">複選(2)</span><span class="pill p-info">Silent miss</span></div>
   <div class="small">景観建築 firm。scheduled local script・Claude Code で再生 OpenAPI files を検査。<b>interactive terminal を開かない</b>・別プロセスが parse 可能な出力・team 定義の agent turn 数で停止。Which TWO。</div>
@@ -215,7 +210,6 @@
 
 <h3>分類 ⑤ 並列隔離パターン（Q47）</h3>
 
-<!-- Q47 -->
 <div class="qcard silent">
   <div class="qhead"><span class="qnum">Q47</span><span class="pill p1">D2 Apps &amp; Integration</span><span class="pill p-sub">単選</span><span class="pill p-info">Silent miss</span></div>
   <div class="small">都市計画 software vendor。Claude Code で<b>3競合 refactor</b> を試行。各 attempt は多数 file 修正・test 実行。diff を side by side 比較・human が最良設計選択前に attempt が別を上書き回避。</div>
@@ -227,7 +221,6 @@
 
 <h3>分類 ⑥ Structured Outputs の境界（Q51）</h3>
 
-<!-- Q51 -->
 <div class="qcard silent">
   <div class="qhead"><span class="qnum">Q51</span><span class="pill p1">D6 Prompt &amp; Context</span><span class="pill p-sub">単選</span><span class="pill p1">Caught</span></div>
   <div class="small">保険 underwriting。Claude <b>Opus 4.8</b> で claim notes 分類・下游 routing。legacy queue 名 <code>Review Needed</code>/<code>Review needed</code>（大文字小文字のみ相違・別 team）。parse 可能 JSON・出力取扱前提の誤 routing 回避。</div>
@@ -237,7 +230,6 @@
   <div class="prep">M2 m2:121/136/141（output constraints / output_config.format）</div>
 </div>
 
-<!-- Silent miss 分析 -->
 <h2>Part B 補足 — Silent miss 4 問（自信があったが間違い）</h2>
 <div class="card">
   <p>誤答8のうち <b>★marked（自覚済）は4問</b>（Q12,13,18,51）。残り <b>4問は自信があったのに間違えた「Silent miss」</b>。自覚精度は Exam1（silent 6 / caught 4）から改善したが、本番で最も危険なのはこの Silent。</p>
@@ -256,9 +248,9 @@
 <!-- Part C: Exam1/Exam2 統合 -->
 <h2>Part C — Exam1/Exam2 統合分析（106 問・18 誤答）</h2>
 <div class="card">
-  <p class="small">2 試験を統合（Exam1: 43/53・Exam2: 44/53 = <b>計 87/106 = 82%</b>）。誤答 18 を<b>トピックグループ</b>で整理し、根本知識の弱点を浮かび上がらせる。</p>
+  <p class="small">2 試験をプール（Exam1: 43/53・Exam2: 44/53 = <b>計 87/106 = 82%</b>）。誤答 18 を<b>トピックグループ</b>で整理。<b>復習していないので、Exam1 の誤答も Exam2 の誤答も全て「未解決の知識ギャップ」</b>。</p>
 
-  <h3>重み付き優先度マトリクス（配点 × 不正率）</h3>
+  <h3>重み付き優先度マトリクス（配点 × プール不正率）</h3>
   <div class="matrix">
     <div class="mc h"></div>
     <div class="mc h">高配点（≥11%）</div>
@@ -290,16 +282,16 @@
   </div>
 
   <table style="margin-top:18px">
-    <thead><tr><th>Domain</th><th class="num">配点</th><th class="num">2試験題</th><th class="num">2試験誤</th><th class="num">正答率</th><th class="num">配点×不正</th><th>優先</th></tr></thead>
+    <thead><tr><th>Domain</th><th class="num">配点</th><th class="num">プール題</th><th class="num">プール誤</th><th class="num">プール正答率</th><th>Exam1 誤</th><th>Exam2 誤</th><th>優先</th></tr></thead>
     <tbody>
-      <tr><td>D1 Agents &amp; Workflows</td><td class="num">14.7%</td><td class="num">16</td><td class="num delta-bad">5</td><td class="num delta-bad">69%</td><td class="num">4.6</td><td><span class="pill p0">P0</span></td></tr>
-      <tr><td>D2 Applications &amp; Integration</td><td class="num">33.1%</td><td class="num">34</td><td class="num">5</td><td class="num">85%</td><td class="num">5.0</td><td><span class="pill p1">P1</span></td></tr>
-      <tr><td>D8 Tools &amp; MCPs</td><td class="num">10.6%</td><td class="num">12</td><td class="num">3</td><td class="num">75%</td><td class="num">2.7</td><td><span class="pill p1">P1</span></td></tr>
-      <tr><td>D6 Prompt &amp; Context</td><td class="num">11.0%</td><td class="num">12</td><td class="num">2</td><td class="num">83%</td><td class="num">1.9</td><td><span class="pill p1">P1</span></td></tr>
-      <tr><td>D5 Model Selection</td><td class="num">16.8%</td><td class="num">18</td><td class="num">2</td><td class="num">89%</td><td class="num">1.8</td><td><span class="pill p1">P1</span></td></tr>
-      <tr><td>D7 Security</td><td class="num">8.1%</td><td class="num">8</td><td class="num">1</td><td class="num">88%</td><td class="num">1.0</td><td><span class="pill p2">P2</span></td></tr>
-      <tr><td>D3 Claude Code</td><td class="num">3.1%</td><td class="num">4</td><td class="num">1</td><td class="num">75%</td><td class="num">0.8</td><td><span class="pill p2">P2</span></td></tr>
-      <tr><td>D4 Eval</td><td class="num">2.6%</td><td class="num">2</td><td class="num">0</td><td class="num delta-ok">100%</td><td class="num">0</td><td><span class="pill p2">維持</span></td></tr>
+      <tr><td>D1 Agents &amp; Workflows</td><td class="num">14.7%</td><td class="num">16</td><td class="num delta-bad">5</td><td class="num delta-bad">69%</td><td class="num">20</td><td class="num">6,12,13,44</td><td><span class="pill p0">P0</span></td></tr>
+      <tr><td>D2 Applications &amp; Integration</td><td class="num">33.1%</td><td class="num">34</td><td class="num">5</td><td class="num">85%</td><td class="num">5,33,44</td><td class="num">47(+skip)</td><td><span class="pill p1">P1</span></td></tr>
+      <tr><td>D8 Tools &amp; MCPs</td><td class="num">10.6%</td><td class="num">12</td><td class="num delta-bad">3</td><td class="num delta-bad">75%</td><td class="num">22,23,41</td><td class="num">—</td><td><span class="pill p1">P1</span></td></tr>
+      <tr><td>D6 Prompt &amp; Context</td><td class="num">11.0%</td><td class="num">12</td><td class="num">2</td><td class="num">83%</td><td class="num">—</td><td class="num">18,51</td><td><span class="pill p1">P1</span></td></tr>
+      <tr><td>D5 Model Selection</td><td class="num">16.8%</td><td class="num">18</td><td class="num">2</td><td class="num">89%</td><td class="num">15,34</td><td class="num">—</td><td><span class="pill p1">P1</span></td></tr>
+      <tr><td>D7 Security</td><td class="num">8.1%</td><td class="num">8</td><td class="num">1</td><td class="num">88%</td><td class="num">50</td><td class="num">—</td><td><span class="pill p2">P2</span></td></tr>
+      <tr><td>D3 Claude Code</td><td class="num">3.1%</td><td class="num">4</td><td class="num">1</td><td class="num">75%</td><td class="num">—</td><td class="num">20</td><td><span class="pill p2">P2</span></td></tr>
+      <tr><td>D4 Eval</td><td class="num">2.6%</td><td class="num">2</td><td class="num">0</td><td class="num delta-ok">100%</td><td class="num">—</td><td class="num">—</td><td><span class="pill p2">維持</span></td></tr>
     </tbody>
   </table>
 
@@ -311,12 +303,12 @@
       <tr><td><b>② Workflow / orchestration pattern</b><br><span class="small">orchestrator-workers / routing / chaining / Workflow tool / subagents / query vs ClaudeSDKClient</span></td><td class="num">3</td><td>Exam1: 20 / Exam2: 13,44</td><td>M2・M4</td></tr>
       <tr><td><b>③ Prompt/Context 機構</b><br><span class="small">prefill / context editing / Structured Outputs</span></td><td class="num">3</td><td>Exam1: 33 / Exam2: 18,51</td><td>M2・公式</td></tr>
       <tr><td><b>④ Claude Code 実行/設定</b><br><span class="small">CLI override / print mode / worktrees / 設定階層</span></td><td class="num">3</td><td>Exam1: 44 / Exam2: 20,47</td><td>公式 doc</td></tr>
-      <tr><td><b>⑤ 新モデル機構</b><span class="small">（Exam2 で克服）</span><br><span class="small">effort / Haiku routing / thinking 課金 / cache_control</span></td><td class="num">2</td><td>Exam1: 15,34</td><td>—</td></tr>
+      <tr><td><b>⑤ 新モデル機構</b><br><span class="small">effort / Haiku routing / thinking 課金 / cache_control</span></td><td class="num">2</td><td>Exam1: 15,34</td><td>M1・M4</td></tr>
       <tr><td>⑥ Skill versioning</td><td class="num">1</td><td>Exam1: 5</td><td>M3・M5</td></tr>
-      <tr><td>⑦ Security（injection/trust）<span class="small">（Exam2 で克服）</span></td><td class="num">1</td><td>Exam1: 50</td><td>—</td></tr>
+      <tr><td>⑦ Security（injection/trust）</td><td class="num">1</td><td>Exam1: 50</td><td>M4</td></tr>
     </tbody>
   </table>
-  <div class="warn-note"><b>統合の核心:</b> 18 誤答の<b>過半数（11問）</b>が <b>グループ①+②+③</b>＝「Agent/Tool/Prompt の<b>選別・使い分け</b>」に集約される。これは全て <b>Prep M2</b>（+ 一部 M3・公式 doc）で潰せる。一方グループ④（Claude Code 実行）3問は<b>Prep 未カバー</b>で公式 doc 必須。グループ⑤⑦（4問）は Exam2 で既に克服済み。</div>
+  <div class="warn-note"><b>統合の核心:</b> 18 誤答の<b>過半数（11問）</b>が <b>グループ①+②+③</b>＝「Agent/Tool/Prompt の<b>選別・使い分け</b>」に集約される。これは全て <b>Prep M2</b>（+ 一部 M3・公式 doc）で潰せる。<b>グループ⑤⑦（Exam1 で誤り Exam2 では出題されず）も未解決</b> — 復習していないので本番で再び出題されれば同じ問違いをする。放置してはいけない。</div>
 
   <h3>marked vs incorrect のギャップ診断（Exam2）</h3>
   <table>
@@ -326,24 +318,24 @@
       <tr><td>D5 Model Selection</td><td class="num">6</td><td class="num">0</td><td><b>6問迷って全問正解</b> = 確信不足（知識はある）</td></tr>
       <tr><td>D6 Prompt</td><td class="num">4</td><td class="num">2</td><td>半分落とす → 境界知識を補強</td></tr>
       <tr><td>D1 Agents</td><td class="num">4</td><td class="num">4</td><td>迷って落とす + 無自覚に落とす = <b>知識が浅い</b></td></tr>
-      <tr><td>D8 Tools/MCPs</td><td class="num">3</td><td class="num">0</td><td>Exam1 弱点→Exam2 安定</td></tr>
-      <tr><td>D7 Security</td><td class="num">2</td><td class="num">0</td><td>安定</td></tr>
+      <tr><td>D8 Tools/MCPs</td><td class="num">3</td><td class="num">0</td><td>Exam2 では迷わず正解（ただし Exam1 で3誤・プール75%）</td></tr>
+      <tr><td>D7 Security</td><td class="num">2</td><td class="num">0</td><td>Exam2 では安定（Exam1 で1誤・プール88%）</td></tr>
     </tbody>
   </table>
-  <div class="note"><b>診断の意味:</b> D5 と D2 は「迷ったが正解」が多く<b>知識はあるが確信不足</b>（演習量で解決）。D1 は「迷って落とす + Silent で落とす」が混在し<b>知識そのものが浅い</b>（Prep M2 の精読で解決）。→ D1 は「読む」、D5/D2 は「解く」。</div>
+  <div class="note"><b>診断の意味:</b> D5 と D2 は「迷ったが正解」が多く<b>知識はあるが確信不足</b>（演習量で解決）。D1 は「迷って落とす + Silent で落とす」が混在し<b>知識そのものが浅い</b>（Prep M2 の精読で解決）。D8 は Exam2 で迷わず正解したが<b>Exam1 の3誤（MCP原語）が未解決</b>のため油断禁物。→ D1 は「読む」、D5/D2 は「解く」、D8 は「Exam1 を復習」。</div>
 </div>
 
 <!-- Part D: 復習計画 -->
 <h2>Part D — 腰を据えた復習計画（核心）</h2>
 <div class="card">
-  <p class="small">Exam1 弱点は Exam2 で克服したが、<b>別領域が崩れた</b>。本番前は<b>領域単位でなくトピック単位</b>で根本知識を固める。Prep M2 が主戦場、3 トピックは公式 doc 補完。</p>
+  <p class="small"><b>前提:</b> Exam1 受験後、復習せずに Exam2 を受験した。つまり Exam1 の誤答10問も Exam2 の誤答8問も<b>全て未解決</b>。優先度は<b>プール正答率</b>で決め、Exam1/Exam2 の両方の誤答を潰す。Prep M2 が主戦場、Exam1 弱点（MCP・Model Selection・Security）もまだ読む必要がある。</p>
 
   <div class="pri-card p0c">
-    <div class="pri-head">🔴 P0 — 本番前に必ず完了 <span class="pri-time">目安: 約120分</span></div>
+    <div class="pri-head">🔴 P0 — 本番前に必ず完了 <span class="pri-time">目安: 約150分</span></div>
 
     <h4 style="margin-top:10px">① Prep <b>M2</b> 徹底 — Agent / Workflow / Tool の選別 <span class="pri-time">約60分</span></h4>
     <ul>
-      <li><b>対象:</b> トピックグループ①②③（11問）+ D1 知識不足の根本解決</li>
+      <li><b>対象:</b> Exam2 の D1/D6 弱点（トピックグループ①②③）。D1 は両試験通じてプール69%＝最大弱点</li>
       <li><b>読む箇所（行番号確定）:</b>
         <ul>
           <li><b>m2:734</b> — 3 つの wiring paths（Messages API 直接 / Agent SDK / Managed Agents）＝ <b>Q6/Q12 の核心</b></li>
@@ -357,45 +349,51 @@
       <li><b>M4 補強:</b> m4:617/631（orchestrator-worker pattern・コスト15倍例）＝ Q13 の裏付け</li>
     </ul>
 
-    <h4>② 公式 doc 補完 — Prep 未カバーの 3 トピック <span class="pri-time">約45分</span></h4>
+    <h4>② <b>Exam1 弱点の復習（未実施）</b> — M3 MCP + M4 Model Selection/Security <span class="pri-time">約45分</span></h4>
+    <ul>
+      <li><b>対象:</b> トピックグループ①の Exam1 分（Q22,23,41）＋ ⑤（Q15,34）＋ ⑦（Q50）。<b>Exam2 で出題されなかった＝解決、ではない</b></li>
+      <li><b>M3 S12–S14 MCP Servers</b> → D8 プール75%。MCP三原語（tool/resource/prompt の制御モデル）・Streamable HTTP・client vs server tool の実行位置（詳細は <a href="../sundog-exam1/weakness-analysis.html">Exam1分析</a>）</li>
+      <li><b>M4 S10A/B + S11–S13</b> → D5 プール89%。<code>effort</code> / adaptive thinking・Haiku 4.5 routing・<b>prompt caching checkpoint 位置</b>・<b>thinking token 課金</b></li>
+      <li><b>M4 S14–S16 Security</b> → D7 プール88%。高リスク用途の人工レビュー・guardrails vs content moderation・層別防御・injection/trust boundary</li>
+    </ul>
+
+    <h4>③ 公式 doc 補完 — Prep 未カバーの 3 トピック <span class="pri-time">約45分</span></h4>
     <ul>
       <li><b>context editing / <code>clear_tool_uses_20250919</code></b>（Q18）→ 公式 doc「Context windows」。server-side 編集 vs caching vs application storage の 3 区別</li>
       <li><b>Claude Code print mode</b>（Q20）→ 公式 doc「Run Claude Code programmatically」+「CLI reference」。<code>-p</code>/<code>--max-turns</code>/<code>--output-format json/stream-json</code></li>
       <li><b>git worktrees</b>（Q47）→ 公式 doc「Claude overview」「Create custom subagents」。filesystem+branch 隔離・会話履歴との分離</li>
     </ul>
-    <div class="warn-note" style="margin-top:8px"><b>注意:</b> この 3 トピックは Prep コースに<b>記述がない</b>（grep 検証済み）。放置すると本番でも Silent miss になる。公式 doc を<code>1枚ずつ</code>読んで<b>自分の言葉で要約</b>すること。</div>
+    <div class="warn-note" style="margin-top:8px"><b>注意:</b> context editing / print mode / worktrees は Prep コースに<b>記述がない</b>（grep 検証済み）。放置すると本番でも Silent miss になる。公式 doc を<code>1枚ずつ</code>読んで<b>自分の言葉で要約</b>すること。</div>
   </div>
 
   <div class="pri-card p1c">
     <div class="pri-head">🟡 P1 — 演習で確度アップ <span class="pri-time">目安: 約40分</span></div>
-    <h4 style="margin-top:10px">③ D5 Model Selection — 「迷って正解」を「確信して正解」へ</h4>
+    <h4 style="margin-top:10px">④ D5 Model Selection — 「迷って正解」を「確信して正解」へ</h4>
     <ul>
-      <li>Exam2 で100%だが<b>6問 marked</b>＝確信不足。知識はあるので<b>演習量</b>で確度を上げる（Prep 丸読みより m4:617/631 と問題演習）</li>
-      <li>M1 S03（<code>effort</code>・モデル family）・M4 S10A/B（routing・tradeoff）は Exam1 で弱点→Exam2 で克服済み。維持</li>
+      <li>Exam2 で100%だが<b>6問 marked</b>＝確信不足。知識はあるので<b>演習量</b>で確度を上げる。ただし<b>Exam1 で Q15/Q34 を誤答したまま未復習</b>（プール89%）→ P0②で MCP と一緒に潰す</li>
     </ul>
-    <h4>④ D2 Apps — 安定維持（配点33%・最大）</h4>
+    <h4>⑤ D2 Apps — 安定維持（配点33%・最大）</h4>
     <ul>
-      <li>正答率85%で安定だが<b>題数が最多（34問）</b>。1問の配点的価値が最大。Worktrees（Q47）は P0 の公式 doc で対応。他は散発</li>
+      <li>プール85%で安定だが<b>題数が最多（34問）</b>。1問の配点的価値が最大。Worktrees（Q47）は P0③の公式 doc で対応</li>
     </ul>
-    <h4>⑤ D6 Prompt — Structured Outputs の境界</h4>
+    <h4>⑥ D6 Prompt — Structured Outputs の境界</h4>
     <ul>
-      <li>Q51（output_config.format・casing・stop_reason・prefill 不可）は P0①の M2 m2:121-141 で潰す。context editing（Q18）も P0②で対応</li>
+      <li>Q51（output_config.format・casing・stop_reason・prefill 不可）は P0①の M2 m2:121-141 で潰す。context editing（Q18）も P0③で対応</li>
     </ul>
   </div>
 
   <div class="pri-card p2c">
     <div class="pri-head">🟢 P2 — メンテナンス・スポット <span class="pri-time">必要時</span></div>
     <ul>
-      <li><b>D8 Tools/MCPs:</b> Exam1 50%→Exam2 100%。M3 S12-14（MCP primitives・transports）は Exam1 で読んだ前提。忘却曲線で近いうちに軽く復習（詳細は <a href="../sundog-exam1/weakness-analysis.html">Exam1分析</a> 参照）</li>
-      <li><b>D7 Security:</b> Exam1 75%→Exam2 100%。M4 S14-16 は Exam1 で読んだ前提。維持</li>
-      <li><b>D3 Claude Code:</b> 題数2問のみ。print mode（Q20）は P0②で対応</li>
+      <li><b>D7 Security:</b> プール88%。Exam1 で Q50 を誤答（未復習）→ P0②で潰す。Exam2 では安定</li>
+      <li><b>D3 Claude Code:</b> プール75%（題数4問のみ）。print mode（Q20）は P0③で対応。設定階層（Exam1 Q44）も要復習</li>
     </ul>
   </div>
 
   <div class="pri-card" style="background:rgba(96,165,250,.06);border-color:rgba(96,165,250,.3)">
     <div class="pri-head" style="color:var(--info)">⏭ スキップ可</div>
     <ul class="small" style="margin-bottom:0">
-      <li><b>D4 Eval（100%）</b>: 題数1問・重み2.6%・両試験で正解。深掘り不要</li>
+      <li><b>D4 Eval（プール100%）</b>: 題数2問・重み2.6%・両試験で正解。深掘り不要</li>
     </ul>
   </div>
 </div>
@@ -411,7 +409,7 @@
     <li><b>③ "best fits" / "Which TWO" で止まらない</b> — 1つ選んで安心せず、残りを全評価</li>
   </ul>
   <h3>多選択「2問目漏れ」対策（継続）</h3>
-  <p>Exam1 で 5/10 問・Exam2 では軽減傾向（Q20 のみ複選で1つ正解→もう1つ漏選）。本番でも継続警戒。</p>
+  <p>Exam1 で 5/10 問・Exam2 では Q20 のみ複選で1つ正解→もう1つ漏選。本番でも継続警戒。</p>
   <ul>
     <li><b>① 確実に正解を1つ選んだら止まらない</b></li>
     <li><b>② 残り全選択肢に「これも正解になり得るか」を問う</b> — 特に「〜も要件を満たす」「〜も同様に有効」の<b>並列構造</b>に警戒</li>
@@ -423,17 +421,18 @@
 <h2>次のアクション</h2>
 <div class="card">
   <ul>
-    <li><b>本日〜:</b> P0①（Prep M2 徹底・約60分）→ P0②（公式 doc 3トピック・約45分）</li>
-    <li><b>その後:</b> <b>Exam3 を受験</b>（同パック最終）。D1/D6 の正答率が上がったか検証</li>
-    <li><b>Exam3 後:</b> 本 HTML フォーマットで 3 試験統合分析（159 問）</li>
-    <li><b>本番（720/1000）</b> — 現在 2 試験平均 82% で通過線 +10pt。D1（69%）を 80% まで引き上げれば本番 720 は十分狙える</li>
+    <li><b>本日〜:</b> P0①（Prep M2 徹底・約60分）→ P0②（Exam1 弱点 MCP/Model Selection/Security・約45分）→ P0③（公式 doc 3トピック・約45分）</li>
+    <li><b>その後:</b> <b>Exam3 を受験</b>（同パック最終）。3 試験プール（159 問）で領域別正答率の推定精度を上げる</li>
+    <li><b>Exam3 後:</b> 本 HTML フォーマットで 3 試験統合分析。プール正答率の信頼区間が安定してくる</li>
+    <li><b>本番（720/1000）</b> — 現在 2 試験プール 82% で通過線 +10pt。D1（69%）を 80% まで引き上げれば本番 720 は十分狙える</li>
     <li>本番前日に本 HTML の「Part C トピックグループ」と「Part D P0」を総ざらい</li>
   </ul>
-  <div class="note"><b>現状地力:</b> 配点の大きい D2(85%)+D5(89%)+D1(69%) = 重み 64.6% で加重平均 約 82%。D1 を 69%→80% に上げると加重平均 +1.6pt。<b>最大の伸び代は D1（知識が浅い＝学習で確実に上がる）</b>。D5/D2 は確信不足なので演習量、D1 は Prep 精読で質を変える。</div>
+  <div class="note"><b>現状地力（プール推定）:</b> 配点の大きい D2(85%)+D5(89%)+D1(69%) = 重み 64.6% で加重平均 約 82%。D1 を 69%→80% に上げると加重平均 +1.6pt。<b>最大の伸び代は D1（知識が浅い＝学習で確実に上がる）</b>。D5/D2 は確信不足なので演習量、D1 は Prep 精読で質を変える。D8 は Exam1 の MCP 弱点が未解決なので油断禁物（プール75%）。</div>
 </div>
 
 <div class="footer">
   データソース: <code>Exam2/{Results,incorrect,marked,all}.webarchive</code>（python3.12 plistlib 抽出）・<code>tasks/prep-course-raw/m{2,3,4}-*.md</code>（grep で行番号確定）<br>
+  注: Exam1→Exam2 間に復習なし。2試験は独立サンプルとして扱い、領域別正答率は<b>プール</b>で推定（1試験単独の「克服/悪化」は判断根拠としない）<br>
   姉妹: <a href="../sundog-exam1/weakness-analysis.html">Exam1 弱点分析</a> · <a href="../sundog-exam1/quality-evaluation.html">Exam1 品質評価</a> · <a href="../README.md">タスク管理</a>
 </div>
 
