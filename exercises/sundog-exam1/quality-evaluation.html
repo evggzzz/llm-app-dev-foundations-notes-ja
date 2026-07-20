@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sundog Exam1 — 問題品質評価 | CCDV-F</title>
+<style>
+  :root{
+    --bg:#0f1117; --card:#171a23; --card2:#1e2230; --border:#2a2f3d;
+    --text:#e6e8ee; --sub:#9aa3b2; --accent:#d97757; --accent2:#7c9eff;
+    --ok:#4ade80; --warn:#fbbf24; --bad:#f87171; --info:#60a5fa;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;line-height:1.7;font-size:15px}
+  .wrap{max-width:1080px;margin:0 auto;padding:32px 20px 80px}
+  header.hero{background:linear-gradient(135deg,#1e2230,#171a23);border:1px solid var(--border);border-radius:14px;padding:28px 32px;margin-bottom:28px}
+  h1{margin:0 0 6px;font-size:26px;letter-spacing:.5px}
+  h1 .tag{font-size:13px;background:var(--accent);color:#1a1208;padding:3px 10px;border-radius:6px;vertical-align:middle;margin-left:8px;font-weight:700}
+  .sub{color:var(--sub);font-size:13px}
+  h2{font-size:20px;border-left:4px solid var(--accent);padding-left:12px;margin:40px 0 16px}
+  h3{font-size:16px;color:var(--accent2);margin:24px 0 10px}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:18px}
+  .grid{display:grid;gap:14px}
+  .g3{grid-template-columns:repeat(3,1fr)}
+  .g4{grid-template-columns:repeat(4,1fr)}
+  @media(max-width:760px){.g3,.g4{grid-template-columns:1fr}}
+  .stat{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:16px;text-align:center}
+  .stat .n{font-size:30px;font-weight:800;color:var(--accent)}
+  .stat .l{font-size:12px;color:var(--sub);margin-top:4px}
+  .verdict{font-size:22px;font-weight:800;text-align:center;padding:14px;border-radius:10px;margin:8px 0}
+  .v-A{background:rgba(74,222,128,.12);color:var(--ok);border:1px solid rgba(74,222,128,.4)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:8px 0}
+  th,td{padding:9px 11px;border-bottom:1px solid var(--border);text-align:left;vertical-align:top}
+  th{background:var(--card2);color:var(--accent2);font-weight:600;position:sticky;top:0}
+  tr:hover td{background:rgba(255,255,255,.02)}
+  .num{text-align:center;font-variant-numeric:tabular-nums}
+  .pill{display:inline-block;padding:2px 8px;border-radius:5px;font-size:11.5px;font-weight:600}
+  .p-ok{background:rgba(74,222,128,.15);color:var(--ok)}
+  .p-warn{background:rgba(251,191,36,.15);color:var(--warn)}
+  .p-bad{background:rgba(248,113,113,.15);color:var(--bad)}
+  .p-info{background:rgba(96,165,250,.15);color:var(--info)}
+  .bar-wrap{background:#0a0c12;border-radius:4px;height:8px;overflow:hidden;min-width:80px;display:inline-block;vertical-align:middle}
+  .bar{height:100%;border-radius:4px}
+  code{background:#0a0c12;border:1px solid var(--border);padding:1px 6px;border-radius:4px;font-size:12.5px;color:var(--accent);font-family:"SF Mono",Menlo,Consolas,monospace}
+  .note{background:rgba(96,165,250,.06);border-left:3px solid var(--info);padding:12px 16px;border-radius:0 8px 8px 0;font-size:13.5px;color:var(--sub)}
+  .note b{color:var(--text)}
+  ul{margin:8px 0;padding-left:22px} li{margin:4px 0}
+  .small{font-size:12.5px;color:var(--sub)}
+  a{color:var(--accent2)}
+  .src{font-size:11.5px;color:var(--sub);margin-top:18px;border-top:1px dashed var(--border);padding-top:12px}
+  .delta-good{color:var(--ok)} .delta-bad{color:var(--bad)}
+  .footer{text-align:center;color:var(--sub);font-size:12px;margin-top:40px;border-top:1px solid var(--border);padding-top:18px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="hero">
+  <h1>Sundog Exam1 — 問題品質評価 <span class="tag">CCDV-F</span></h1>
+  <div class="sub">Udemy「Sundog Education (Frank Kane) CCDV-F Practice Exam Pack」Exam1 × 公式試験ガイド × Prepコース(M1–M5) 照合 · 作成 2026-07-20</div>
+</header>
+
+<!-- サマリ -->
+<div class="card">
+  <h2 style="margin-top:0">総合評価</h2>
+  <div class="verdict v-A">A（優） — 公式Blueprintと±1.0pt以内で整合、技術的正確性も高い</div>
+  <div class="grid g4" style="margin-top:14px">
+    <div class="stat"><div class="n">81%</div><div class="l">あなたの正答率 (43/53)</div></div>
+    <div class="stat"><div class="n">±1.0<span style="font-size:14px">pt</span></div><div class="l">Blueprint最大ズレ</div></div>
+    <div class="stat"><div class="n">10/10</div><div class="l">公式doc根拠のある解説</div></div>
+    <div class="stat"><div class="n">A</div><div class="l">難易度・実戦性</div></div>
+  </div>
+  <p class="small" style="margin-top:14px">Sundog問題集は公式試験ガイドのBlueprint重み付けに忠実に従っており、全選択肢に個別解説・公式ドキュメント根拠リンクが付与されている。誤問10問の解説をPrepコース(M1–M5)と照合しても技術的に矛盾なし。<b>本番対策の主軸教材として信頼できる品質</b>。</p>
+</div>
+
+<!-- Blueprint Coverage -->
+<h2>1. Blueprint Coverage（領域分布の整合性）</h2>
+<div class="card">
+  <p>Sundog Exam1の出題分布と公式ガイドの重み付けを比較。<b>全8領域でズレ ±1.0pt以内</b>（最大は Applications &amp; Integration の −1.0pt）。これは同問題集が「公式Blueprint完全一致」を謳う根拠であり、コース説明文でも明記されている。</p>
+  <table>
+    <thead><tr><th>Domain（公式番号）</th><th class="num">公式重み</th><th class="num">出題数</th><th class="num">実分布</th><th class="num">ズレ</th><th>分布評価</th></tr></thead>
+    <tbody>
+      <tr><td>D2 Applications &amp; Integration</td><td class="num">33.1%</td><td class="num">17</td><td class="num">32.1%</td><td class="num delta-bad">−1.0</td><td><span class="pill p-ok">良</span></td></tr>
+      <tr><td>D5 Model Selection &amp; Optimization</td><td class="num">16.8%</td><td class="num">9</td><td class="num">17.0%</td><td class="num delta-good">+0.2</td><td><span class="pill p-ok">良</span></td></tr>
+      <tr><td>D1 Agents &amp; Workflows</td><td class="num">14.7%</td><td class="num">8</td><td class="num">15.1%</td><td class="num delta-good">+0.4</td><td><span class="pill p-ok">良</span></td></tr>
+      <tr><td>D6 Prompt &amp; Context Engineering</td><td class="num">11.0%</td><td class="num">6</td><td class="num">11.3%</td><td class="num delta-good">+0.3</td><td><span class="pill p-ok">良</span></td></tr>
+      <tr><td>D8 Tools &amp; MCPs</td><td class="num">10.6%</td><td class="num">6</td><td class="num">11.3%</td><td class="num delta-good">+0.7</td><td><span class="pill p-ok">良</span></td></tr>
+      <tr><td>D7 Security &amp; Safety</td><td class="num">8.1%</td><td class="num">4</td><td class="num">7.5%</td><td class="num delta-bad">−0.6</td><td><span class="pill p-ok">良</span></td></tr>
+      <tr><td>D3 Claude Code</td><td class="num">3.1%</td><td class="num">2</td><td class="num">3.8%</td><td class="num delta-good">+0.7</td><td><span class="pill p-ok">良</span></td></tr>
+      <tr><td>D4 Eval, Testing, Debugging</td><td class="num">2.6%</td><td class="num">1</td><td class="num">1.9%</td><td class="num delta-bad">−0.7</td><td><span class="pill p-warn">薄い</span></td></tr>
+      <tr style="font-weight:700;background:var(--card2)"><td>合計</td><td class="num">100%</td><td class="num">53</td><td class="num">100%</td><td class="num">—</td><td></td></tr>
+    </tbody>
+  </table>
+  <div class="note">コース説明文（抜粋）: <i>"Each domain appears in the same proportion as the real exam, so your score is a reliable predictor of your outcome."</i> — 実測もこれを裏付ける。<b>成績は本番スコアの妥当な予測値として扱える</b>。</div>
+</div>
+
+<!-- 技術的正確性 -->
+<h2>2. 技術的正確性（Prepコース M1–M5 と照合）</h2>
+<div class="card">
+  <p>誤問10問の公式解説が主張する技術的ポイントを、手元のPrepコースraw（M1–M5）および公式ガイドと突き合わせた。<b>全項目で矛盾なし</b>。下表に主要な検証ポイントと対応Prep画面を示す。</p>
+  <table>
+    <thead><tr><th>技術的主張（解説）</th><th>出典 問</th><th>Prepコース 対応箇所</th><th>検証</th></tr></thead>
+    <tbody>
+      <tr><td>Claude Sonnet 5 は <code>thinking.budget_tokens</code> を拒否(400)、<code>effort</code> で推論深度調整</td><td>Q15</td><td>M1 S03 Models &amp; Reasoning / M4 S10A Model Selection</td><td><span class="pill p-ok">一致</span></td></tr>
+      <tr><td>Haiku 4.5 は「fastest・near-frontier」、高ボリューム単純タスク向け</td><td>Q15, Q48</td><td>M1 S03 / M4 S10A</td><td><span class="pill p-ok">一致</span></td></tr>
+      <tr><td>Prompt caching の <code>cache_control</code> は<b>安定プレフィックス末尾</b>に配置</td><td>Q34</td><td>M4 S11 Cost &amp; Orchestration</td><td><span class="pill p-ok">一致</span></td></tr>
+      <tr><td>Thinking は表示 omitted でも<b>課金対象</b>（<code>output_tokens_details.thinking_tokens</code>）</td><td>Q34</td><td>M4 S11 Cost &amp; Orchestration</td><td><span class="pill p-ok">一致</span></td></tr>
+      <tr><td>MCP の Streamable HTTP は HTTP+SSE を<b>protocol 2024-11-05 から置換</b></td><td>Q41</td><td>M3 S12 MCP Servers</td><td><span class="pill p-ok">一致</span></td></tr>
+      <tr><td>MCP 三原語: tool=モデル制御 / resource=アプリ制御 / prompt=ユーザー制御</td><td>Q41</td><td>M3 S12 MCP Servers</td><td><span class="pill p-ok">一致</span></td></tr>
+      <tr><td>client tool（アプリ実行）vs server tool（Anthropic基盤）の実行位置の違い</td><td>Q22</td><td>M2 S07 Tool-use &amp; Schema Design</td><td><span class="pill p-ok">一致</span></td></tr>
+      <tr><td>Agent Skill は「再利用可能な知識・テンプレ・スクリプト」、code execution で動作</td><td>Q23, Q5</td><td>M3 S08 Packaging Workflows</td><td><span class="pill p-ok">一致</span></td></tr>
+      <tr><td><code>ClaudeSDKClient</code>（多ターン・中断可）vs <code>query()</code>（one-off）</td><td>Q20</td><td>M2 S16 Agent Construction</td><td><span class="pill p-ok">一致</span></td></tr>
+      <tr><td>Messages API の assistant prefill（部分assistant turnから続きを生成）</td><td>Q33</td><td>M2 S02 Prompting Craft / 公式ガイド D2 API Mechanics</td><td><span class="pill p-ok">一致</span></td></tr>
+      <tr><td>Claude Code 設定階層（CLI override &gt; shared &gt; user）、CLAUDE.mdは文脈層</td><td>Q44</td><td>M3 S02 Permission Modes &amp; Human Gates</td><td><span class="pill p-ok">一致</span></td></tr>
+      <tr><td>高リスク用途（住宅・金融・医療等）は合格した人工レビュー + 層別防御が必須</td><td>Q50</td><td>M4 S14 Security</td><td><span class="pill p-ok">一致</span></td></tr>
+    </tbody>
+  </table>
+  <div class="note"><b>品質の強み:</b> 各問題の Overall explanation が <i>"See the official ... guide"</i> で公式doc（Agent Skills overview, Prompt caching, MCP tools, Adaptive thinking 等）を明示参照しており、根拠の透明性が高い。AI生成問題集に多い「出處不明の断言」が見られない。</div>
+</div>
+
+<!-- 難易度・ディストラクタ -->
+<h2>3. 難易度・ディストラクタ品質</h2>
+<div class="card">
+  <table>
+    <thead><tr><th>評価項目</th><th>評価</th><th>所見</th></tr></thead>
+    <tbody>
+      <tr><td>問題形式</td><td><span class="pill p-ok">優</span></td><td>全問「業界シナリオ + 4選択肢」。公式ガイド Sample問題と同形式。単なる暗記でなく<b>トレードオフ判断</b>を問う設計（例: 一時的モデル切替 vs 共有設定変更）。</td></tr>
+      <tr><td>ディストラクタ（誤答選択肢）</td><td><span class="pill p-ok">優</span></td><td>もっともらしい誤答が「なぜ誤りか」まで個別解説される（例: Q34「thinking omitted で課金免除」→却下理由を明記）。受験者の<b>誤概念を的確に突く</b>作り。</td></tr>
+      <tr><td>多選択問題（multiple-response）</td><td><span class="pill p-ok">優</span></td><td>「2つ選べ」問題で<b>半正解＝誤答</b>扱い。本番の評点（部分点なしが通例）を忠実に模倣。</td></tr>
+      <tr><td>解説の深さ</td><td><span class="pill p-ok">優</span></td><td>各選択肢に加え "Overall explanation" で<b>設計思想・公式docリンク・誤答の陥穽</b>を3段落で解説。復習教材として単体で完結する。</td></tr>
+      <tr><td>難易度</td><td><span class="pill p-info">本番相当〜やや上</span></td><td>実務経験者（MQC）向け。新モデル機構（<code>effort</code>, adaptive thinking）など<b>最新仕様を取り込んでおり鮮度が高い</b>。81%正答なら本番720ラインは概ね安心圏。</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- 改善点 -->
+<h2>4. 改善点・注意点</h2>
+<div class="card">
+  <ul>
+    <li><b>D4 Eval が1問のみ（1.9%）</b> — 重み2.6%相応だが、_evals/judge/tracing/debugging_ の演習量としては薄い。公式ガイド Sample や Prep M4 S02–S07 で補完推奨。</li>
+    <li><b>D3 Claude Code が2問のみ</b> — 重み3.1%相応。CLAUDE.md・settings.json・hooks は出題済みだが headless/auto モードは未出題。Prep M3 S02 で補強。</li>
+    <li><b>「複数正解の2つ目」漏れが目立つ</b> — あなたの誤問10問中5問（Q5/15/34/41/50）が「1つは正解・もう1つを漏選」。教材の欠陥ではなく受験スキルの問題（→ <a href="weakness-analysis.html">弱点分析HTML</a> で対策）。</li>
+    <li><b>技術的鮮度のリスク</b> — Sonnet 5 / Opus 4.8 / Haiku 4.5 / <code>effort</code> / <code>compact_20260112</code> など<b>2026年7月時点の最新仕様</b>を反映。モデルIDや仕様が本番前に更新された場合は要追随（同問題集 Last updated July 2026）。</li>
+    <li><b>公開情報からの品質評価</b> — 講師 Frank Kane（Amazon 元シニア、ML特許26件、受講生120万人）。AI使用を明記、返金保証30日。<a href="https://www.udemy.com/course/claude-certified-developer-foundations-practice-exam-pack/" target="_blank">コースURL</a>。</li>
+  </ul>
+</div>
+
+<!-- 総評 -->
+<h2>5. 総評</h2>
+<div class="card">
+  <p><b>Sundog Exam1 は本番対策の主軸として推せる品質（A評価）。</b>Blueprint整合性・技術的正確性・解説の深さ・ディストラクタ品質の4軸で安定。特に「公式doc根拠を明示する解説」は、正解を暗記するのでなく<b>設計判断を学ぶ</b>用途に適している。残り2回（Exam2/3）も同等と期待できる。</p>
+  <div class="note"><b>推奨使い方:</b> (1) まず実戦通り解く → (2) 正解問題も含め全選択肢の解説を読む（特に<b>Tools &amp; MCPs / Model Selection</b>は誤問以外も盲点あり） → (3) 公式docリンクを辿り根拠を確認 → (4) Prepコースの該当画面で補強。</div>
+</div>
+
+<div class="footer">
+  データソース: <code>Exam1/*.webarchive</code>（全53問フル解説） · <code>OFFICIAL-Claude+Certified+Developer–Foundations+Exam+Guide.pdf</code> · <code>tasks/prep-course-raw/m1-m5-*.md</code><br>
+  姉妹ファイル: <a href="weakness-analysis.html">Exam1 弱点分析 &amp; Prep優先復習</a> · <a href="../README.md">タスク管理</a>
+</div>
+
+</div>
+</body>
+</html>
