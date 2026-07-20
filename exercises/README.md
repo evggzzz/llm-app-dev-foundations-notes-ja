@@ -19,6 +19,7 @@
 |---|---|
 | [`sundog-exam1/quality-evaluation.html`](./sundog-exam1/quality-evaluation.html) / [.pdf](./sundog-exam1/quality-evaluation.pdf) | 問題集の品質評価（公式 Blueprint との整合性・技術的正確性） |
 | [`sundog-exam1/weakness-analysis.html`](./sundog-exam1/weakness-analysis.html) / [.pdf](./sundog-exam1/weakness-analysis.pdf) | 自身の苦手分野の分析と優先復習案 |
+| [`sundog-exam2/exam2-review.html`](./sundog-exam2/exam2-review.html) / [.pdf](./sundog-exam2/exam2-review.pdf) | Exam2 の分析 ＋ Exam1/Exam2 統合復習計画（弱点の振り子・誤答18問のトピックグループ化・Prep 優先順位） |
 
 ## 使い方
 

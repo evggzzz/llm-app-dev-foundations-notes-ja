@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sundog Exam2 分析 ＋ Exam1/Exam2 統合復習 | CCDV-F</title>
+<style>
+  :root{
+    --bg:#0f1117; --card:#171a23; --card2:#1e2230; --border:#2a2f3d;
+    --text:#e6e8ee; --sub:#9aa3b2; --accent:#d97757; --accent2:#7c9eff;
+    --ok:#4ade80; --warn:#fbbf24; --bad:#f87171; --info:#60a5fa; --p0:#f87171; --p1:#fbbf24; --p2:#4ade80;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;line-height:1.7;font-size:15px}
+  .wrap{max-width:1100px;margin:0 auto;padding:32px 20px 80px}
+  header.hero{background:linear-gradient(135deg,#1e2230,#171a23);border:1px solid var(--border);border-radius:14px;padding:28px 32px;margin-bottom:28px}
+  h1{margin:0 0 6px;font-size:26px;letter-spacing:.5px}
+  h1 .tag{font-size:13px;background:var(--accent);color:#1a1208;padding:3px 10px;border-radius:6px;vertical-align:middle;margin-left:8px;font-weight:700}
+  .sub{color:var(--sub);font-size:13px}
+  h2{font-size:20px;border-left:4px solid var(--accent);padding-left:12px;margin:44px 0 16px}
+  h3{font-size:16px;color:var(--accent2);margin:24px 0 10px}
+  h4{font-size:14px;margin:14px 0 6px;color:var(--text)}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:18px}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:8px 0}
+  th,td{padding:9px 11px;border-bottom:1px solid var(--border);text-align:left;vertical-align:top}
+  th{background:var(--card2);color:var(--accent2);font-weight:600}
+  tr:hover td{background:rgba(255,255,255,.02)}
+  .num{text-align:center;font-variant-numeric:tabular-nums}
+  .pill{display:inline-block;padding:2px 8px;border-radius:5px;font-size:11.5px;font-weight:600;white-space:nowrap}
+  .p0{background:rgba(248,113,113,.16);color:var(--p0)}
+  .p1{background:rgba(251,191,36,.16);color:var(--p1)}
+  .p2{background:rgba(74,222,128,.16);color:var(--p2)}
+  .p-info{background:rgba(96,165,250,.16);color:var(--info)}
+  .p-sub{background:#2a2f3d;color:var(--sub)}
+  .p-ok{background:rgba(74,222,128,.16);color:var(--ok)}
+  code{background:#0a0c12;border:1px solid var(--border);padding:1px 6px;border-radius:4px;font-size:12.5px;color:var(--accent);font-family:"SF Mono",Menlo,Consolas,monospace}
+  .qcard{background:var(--card);border:1px solid var(--border);border-left:4px solid var(--bad);border-radius:10px;padding:16px 20px;margin-bottom:14px}
+  .qcard.silent{border-left-color:var(--warn)}
+  .qhead{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:8px}
+  .qnum{font-weight:800;font-size:16px;color:var(--accent)}
+  .qgap{font-size:13px;color:var(--text);margin:8px 0 6px;padding:8px 12px;background:rgba(248,113,113,.07);border-radius:6px}
+  .qgap b{color:var(--bad)}
+  .opt{font-size:13px;margin:3px 0;padding-left:18px;position:relative}
+  .opt:before{position:absolute;left:0;font-weight:700}
+  .opt.you:before{content:"あなた ";color:var(--bad);font-size:11px;top:2px}
+  .opt.correct:before{content:"正解 ";color:var(--ok);font-size:11px;top:2px}
+  .opt.miss:before{content:"漏選 ";color:var(--warn);font-size:11px;top:2px}
+  .opt.you{color:var(--sub);text-decoration:line-through;text-decoration-color:rgba(248,113,113,.5)}
+  .opt.correct{color:var(--ok);font-weight:600}
+  .opt.miss{color:var(--warn)}
+  .prep{font-size:12.5px;color:var(--accent2);margin-top:6px}
+  .prep:before{content:"📘 "}
+  .doc{font-size:12.5px;color:var(--info);margin-top:4px}
+  .doc:before{content:"📄 "}
+  .note{background:rgba(96,165,250,.06);border-left:3px solid var(--info);padding:12px 16px;border-radius:0 8px 8px 0;font-size:13.5px;color:var(--sub)}
+  .note b{color:var(--text)}
+  .warn-note{background:rgba(251,191,36,.07);border-left:3px solid var(--warn);padding:12px 16px;border-radius:0 8px 8px 0;font-size:13.5px}
+  .warn-note b{color:var(--warn)}
+  .bad-note{background:rgba(248,113,113,.07);border-left:3px solid var(--bad);padding:12px 16px;border-radius:0 8px 8px 0;font-size:13.5px}
+  .bad-note b{color:var(--bad)}
+  .pri-card{border-radius:10px;padding:16px 20px;margin-bottom:14px;border:1px solid var(--border)}
+  .pri-card.p0c{background:linear-gradient(135deg,rgba(248,113,113,.12),var(--card));border-color:rgba(248,113,113,.4)}
+  .pri-card.p1c{background:linear-gradient(135deg,rgba(251,191,36,.10),var(--card));border-color:rgba(251,191,36,.35)}
+  .pri-card.p2c{background:linear-gradient(135deg,rgba(74,222,128,.08),var(--card));border-color:rgba(74,222,128,.3)}
+  .pri-head{font-size:17px;font-weight:800;margin-bottom:6px}
+  .pri-time{font-size:12px;color:var(--sub);font-weight:400;margin-left:8px}
+  ul{margin:8px 0;padding-left:22px} li{margin:4px 0}
+  .small{font-size:12.5px;color:var(--sub)}
+  a{color:var(--accent2)}
+  .matrix{display:grid;grid-template-columns:90px 1fr 1fr;gap:0;border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-top:12px}
+  .mc{padding:12px;border-right:1px solid var(--border);border-bottom:1px solid var(--border);font-size:13px}
+  .mc:nth-child(3n){border-right:none}
+  .mc.h{background:var(--card2);color:var(--accent2);font-weight:600;text-align:center;font-size:12px}
+  .mc.axis{background:var(--card2);writing-mode:vertical-rl;text-orientation:mixed;text-align:center;color:var(--sub);font-size:11px;font-weight:600}
+  .mc.cell{min-height:80px}
+  .tag-d{display:inline-block;font-size:11px;padding:1px 6px;border-radius:4px;background:var(--card2);border:1px solid var(--border);margin:2px}
+  .delta-bad{color:var(--bad);font-weight:700}
+  .delta-ok{color:var(--ok);font-weight:700}
+  .footer{text-align:center;color:var(--sub);font-size:12px;margin-top:40px;border-top:1px solid var(--border);padding-top:18px}
+  /* === print / PDF === */
+  @media print{
+    *{-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important}
+    body{background:#0f1117 !important}
+    .wrap{max-width:none;padding:0}
+    header.hero,h2,h3{break-after:avoid;page-break-after:avoid}
+    .card,.qcard,.pri-card,.matrix{break-inside:avoid;page-break-inside:avoid}
+    table{break-inside:auto}
+    tr{break-inside:avoid;page-break-inside:avoid}
+    a{color:var(--accent2);text-decoration:none}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="hero">
+  <h1>Sundog Exam2 分析 ＋ Exam1/Exam2 統合復習 <span class="tag">CCDV-F</span></h1>
+  <div class="sub">Exam2: 83%合格(44/53) · 誤答8 · Silent miss4 · Exam1(81%)と統合 · 作成 2026-07-20 · 姉妹: <a href="../sundog-exam1/weakness-analysis.html">Exam1弱点分析</a></div>
+</header>
+
+<!-- サマリ: 3つの真因（Exam2版） -->
+<div class="card">
+  <h2 style="margin-top:0">Exam2 サマリ — 弱点は「振り子」した</h2>
+  <div class="grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px">
+    <div style="background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:16px">
+      <div style="font-size:13px;color:var(--bad);font-weight:700">① 最大弱点（Exam1→急落）</div>
+      <div style="font-size:24px;font-weight:800;margin:6px 0">D1 Agents <span style="font-size:14px;color:var(--bad)">50%</span></div>
+      <div class="small">Exam1 88%→<b>50%に半減</b>。Agent SDK・workflow patterns・Workflow tool の<b>選別</b>で4問失点。配点14.7%でRO急所。</div>
+    </div>
+    <div style="background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:16px">
+      <div style="font-size:13px;color:var(--bad);font-weight:700">② 得意→崩落</div>
+      <div style="font-size:24px;font-weight:800;margin:6px 0">D6 Prompt <span style="font-size:14px;color:var(--warn)">67%</span></div>
+      <div class="small">Exam1 100%→67%。context editing・Structured Outputs の<b>境界知識</b>が浅かった。prefill≠caching≠context editing。</div>
+    </div>
+    <div style="background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:16px">
+      <div style="font-size:13px;color:var(--ok);font-weight:700">③ 克服（Exam1弱点）</div>
+      <div style="font-size:24px;font-weight:800;margin:6px 0">D8/D5/D7 <span style="font-size:14px;color:var(--ok)">100%</span></div>
+      <div class="small">Exam1 の D8(50%)/D5(78%)/D7(75%) は<b>全て100%に克服</b>。ツール原語・新モデル機構は定着。→ 弱点が<b>別領域に移動</b>。</div>
+    </div>
+  </div>
+  <div class="bad-note" style="margin-top:14px"><b>核心: 弱点の振り子現象。</b> Exam1 の弱点(D8/D5/D7)を意識して臨んだ結果、今度は <b>D1/D6/D3（Exam1で得意）が崩落</b>。部分的復習では弱点が移動するだけ。<b>106問全体を統合し、トピック単位で根本知識を固める</b>必要がある — これが本HTMLの目的。</div>
+</div>
+
+<!-- Part A: 領域別成績＋Exam1比較 -->
+<h2>Part A — Exam2 領域別成績 ＋ Exam1 比較</h2>
+<div class="card">
+  <table>
+    <thead><tr><th>Domain</th><th class="num">配点</th><th class="num">題数</th><th class="num">Exam2</th><th class="num">Exam1</th><th class="num">変化</th><th>Exam2 誤答</th><th>診断</th></tr></thead>
+    <tbody>
+      <tr><td>D1 Agents &amp; Workflows</td><td class="num">14.7%</td><td class="num">8</td><td class="num delta-bad">50%</td><td class="num">88%</td><td class="num delta-bad">⬇ -38</td><td class="num">6,12,13,44</td><td><span class="pill p0">P0</span> 知識が浅い</td></tr>
+      <tr><td>D2 Applications &amp; Integration</td><td class="num">33.1%</td><td class="num">17</td><td class="num">88%</td><td class="num">82%</td><td class="num delta-ok">⬆ +6</td><td class="num">47 (+1skip)</td><td><span class="pill p1">P1</span> 安定・迷い多い</td></tr>
+      <tr><td>D3 Claude Code</td><td class="num">3.1%</td><td class="num">2</td><td class="num delta-bad">50%</td><td class="num">100%</td><td class="num delta-bad">⬇ -50</td><td class="num">20</td><td><span class="pill p2">P2</span> 題数少</td></tr>
+      <tr><td>D4 Eval, Testing</td><td class="num">2.6%</td><td class="num">1</td><td class="num delta-ok">100%</td><td class="num">100%</td><td class="num">→</td><td class="num">—</td><td><span class="pill p2">維持</span></td></tr>
+      <tr><td>D5 Model Selection</td><td class="num">16.8%</td><td class="num">9</td><td class="num delta-ok">100%</td><td class="num">78%</td><td class="num delta-ok">⬆ 克服</td><td class="num">—</td><td><span class="pill p1">P1</span> 確信不足</td></tr>
+      <tr><td>D6 Prompt &amp; Context</td><td class="num">11.0%</td><td class="num">6</td><td class="num delta-bad">67%</td><td class="num">100%</td><td class="num delta-bad">⬇ -33</td><td class="num">18,51</td><td><span class="pill p1">P1</span> 境界知識</td></tr>
+      <tr><td>D7 Security &amp; Safety</td><td class="num">8.1%</td><td class="num">4</td><td class="num delta-ok">100%</td><td class="num">75%</td><td class="num delta-ok">⬆ 克服</td><td class="num">—</td><td><span class="pill p2">維持</span></td></tr>
+      <tr><td>D8 Tools &amp; MCPs</td><td class="num">10.6%</td><td class="num">6</td><td class="num delta-ok">100%</td><td class="num">50%</td><td class="num delta-ok">⬆ 克服</td><td class="num">—</td><td><span class="pill p1">P1</span> 要メンテ</td></tr>
+    </tbody>
+  </table>
+  <div class="note"><b>Exam2の分布:</b> 誤答8 = D1(4) + D6(2) + D3(1) + D2(1)。D1 Agents に<b>半数が集中</b>。Exam1 の誤答分布(D8:3, D2:3, D5:2, D7:1, D1:1)とは<b>ほぼ逆転</b>。+ skipped 1（D2、時間切れ）。</div>
+</div>
+
+<!-- Part B: 誤答8問の詳細 -->
+<h2>Part B — Exam2 誤答8問 詳細解説（ギャップ6分類）</h2>
+<p class="small">「あなた」=選んだ誤答、「正解」=正解選択肢、「漏選」=正解だが未選択。<b>Silent miss</b>=自信があったが誤、<b>Caught</b>=★marked（自覚済）で誤。</p>
+
+<h3>分類 ① Agent SDK / agentic loop の選別（Q6, Q12）</h3>
+
+<!-- Q6 -->
+<div class="qcard silent">
+  <div class="qhead"><span class="qnum">Q6</span><span class="pill p0">D1 Agents</span><span class="pill p-sub">単選</span><span class="pill p-info">Silent miss</span></div>
+  <div class="small">ゲームスタジオのビルドチーム。内部デスクトップutility。ローカルcheckout を検査・編集・標準coding tools・UI に進捗stream・tool call 前に決定的検証。<b>tool 実行 loop は自前実装したくない</b>。</div>
+  <div class="opt you">Claude Managed Agents を cloud sandbox にデプロイ・各checkout をコピー・session events を stream</div>
+  <div class="opt correct">Claude Agent SDK を組み込み・file tools 有効化・SDK messages を stream・hooks 追加</div>
+  <div class="qgap"><b>ギャップ:</b> 3つの wiring path（M2 m2:734）の選別。Managed Agents = <b>クラウド sandbox</b>（本件はローカル直操作に不適）。Client SDK = tool loop <b>自前実装</b>要。<b>Agent SDK</b> = プロセス内で Claude Code の loop・built-in tools・hooks を組み込み。→「ローカル + loop 自前不要」なら Agent SDK 一択。</div>
+  <div class="prep">M2 m2:734（3 wiring paths）・m2:1401（Agent SDK 定義）</div>
+</div>
+
+<!-- Q12 -->
+<div class="qcard silent">
+  <div class="qhead"><span class="qnum">Q12</span><span class="pill p0">D1 Agents</span><span class="pill p-sub">単選</span><span class="pill p1">Caught</span></div>
+  <div class="small">海事保険。TypeScript desktop app。ローカルcheckout・built-in coding tools・autonomous loop・UI stream。loop 構築回避 + <b>各 laptop への CC 別途インストール回避</b>。</div>
+  <div class="opt you">Anthropic Client SDK インストール・Messages API で tools を自動実行</div>
+  <div class="opt correct"><code>@anthropic-ai/claude-agent-sdk</code> インストール・streaming agent loop 使用</div>
+  <div class="qgap"><b>ギャップ:</b> Client SDK は Messages API の<b>薄い wrapper</b>（agent loop / built-in coding tools なし・自前 harness 必要）。Agent SDK の TS 版 <code>@anthropic-ai/claude-agent-sdk</code> は <b>native Claude Code binary を同梱</b>（CC別途不要）。旧 "Claude Code SDK" は legacy 名。</div>
+  <div class="prep">M2 m2:1401（SDK 定義） / M3 m3:319/339（Managed Agents beta）</div>
+</div>
+
+<h3>分類 ② Workflow / orchestration pattern の選別（Q13, Q44）</h3>
+
+<!-- Q13 -->
+<div class="qcard silent">
+  <div class="qhead"><span class="qnum">Q13</span><span class="pill p0">D1 Agents</span><span class="pill p-sub">単選</span><span class="pill p1">Caught</span></div>
+  <div class="small">公選弁護人の e-discovery。各 case は<b>同じ intake memo</b> で終わる。中間作業は検査後<b>異なり得る</b>（timeline / 証人比較 / 不一致check / 索引）。worker 役割は事前既知。<b>open-ended より予測可能性</b>重視。</div>
+  <div class="opt you">simple routing workflow・最初の文書のみで1専門家に送る</div>
+  <div class="opt correct">orchestrator-workers workflow・監督 LLM が関連 worker 分析を割当・出力統合</div>
+  <div class="qgap"><b>ギャップ:</b> workflow patterns（"Building Effective Agents" m2:1386）の選別。<b>routing</b>=1入力を1パスに分類（本件は1 case に複数分析が必要で不適）。<b>orchestrator-workers</b>=動的に subtask 分解しつつ予測可能な最終構造を保持 = 本件の sweet spot。完全 autonomous は over-kill。</div>
+  <div class="prep">M2 m2:1386 / M4 m4:617/631（orchestrator-worker・コスト）</div>
+</div>
+
+<!-- Q44 -->
+<div class="qcard silent">
+  <div class="qhead"><span class="qnum">Q44</span><span class="pill p0">D1 Agents</span><span class="pill p-sub">単選</span><span class="pill p-info">Silent miss</span></div>
+  <div class="small">臨床試験 data platform。各 migration で<b>60 の独立 check</b>・findings 比較・統合 plan。main 会話は coordination に集中・全検索結果/中間 transcript 蓄積回避。</div>
+  <div class="opt you">main agent が各 check を1つずつ subagent 呼出</div>
+  <div class="opt correct">Workflow tool で orchestration script から独立 check を実行</div>
+  <div class="qgap"><b>ギャップ:</b> <b>subagents</b>(少数・隔離 context) vs <b>Workflow tool</b>(大規模 fan-out・orchestration を script 化・会話外実行) の使い分け（m2:1409 / m3:211）。数十の独立 check は Workflow tool。1個ずつ委任は会話 loop に orchestration が残り latency/coordination overhead。</div>
+  <div class="prep">M2 m2:1409（Subagent） / M3 m3:211（Subagents） / 公式: Dynamic workflows</div>
+</div>
+
+<h3>分類 ③ Context 管理メカニズム（Q18）</h3>
+
+<!-- Q18 -->
+<div class="qcard silent">
+  <div class="qhead"><span class="qnum">Q18</span><span class="pill p1">D6 Prompt &amp; Context</span><span class="pill p-sub">単選</span><span class="pill p1">Caught</span></div>
+  <div class="small">医薬品安全監視。Claude triage agent が冗長 scanner logs を返す tool を呼ぶ。findings 抽出後・古い tool 出力は不要。ただし<b>完全 audit 履歴は自前 DB 保持</b>。client 側履歴を書き換えずに API で Claude の見える情報を減らしたい。</div>
+  <div class="opt you">audit DB から古い tool result messages を削除</div>
+  <div class="opt correct">context editing・request の tool result clearing を有効化（<code>clear_tool_uses_20250919</code>）</div>
+  <div class="qgap"><b>ギャップ:</b> 3つの区別。① <b>context editing</b>=server-side で Claude に届く前に適用（client は完全履歴保持可）。② <b>prompt caching</b>=cost/latency 最適化（cached token は文脈を占有・刈りでない）。③ <b>application storage</b>=監査DB（削除は監査要件と衝突）。→「DB保持 + Claudeの見える文脈だけ削る」= context editing 一択。</div>
+  <div class="doc">公式 doc: Context windows（context editing / clear_tool_uses_20250919） — <b>Prep未カバー</b></div>
+</div>
+
+<h3>分類 ④ Claude Code 実行モード（Q20）</h3>
+
+<!-- Q20 -->
+<div class="qcard silent">
+  <div class="qhead"><span class="qnum">Q20</span><span class="pill p2">D3 Claude Code</span><span class="pill p-sub">複選(2)</span><span class="pill p-info">Silent miss</span></div>
+  <div class="small">景観建築 firm。scheduled local script・Claude Code で再生 OpenAPI files を検査。<b>interactive terminal を開かない</b>・別プロセスが parse 可能な出力・team 定義の agent turn 数で停止。Which TWO。</div>
+  <div class="opt correct">✓ <code>claude -p</code> / <code>--print</code> で検査 prompt を実行（あなたは正選）</div>
+  <div class="opt you">interactive で <code>claude</code> 起動・<code>--max-turns</code> 設定後 prompt 入力</div>
+  <div class="opt correct">✓ <code>--output-format json</code> / <code>stream-json</code> + <code>--max-turns</code> 設定</div>
+  <div class="qgap"><b>ギャップ:</b> <b>print mode</b>(<code>-p</code>/<code>--print</code>) が非対話・自動化専用。<code>--max-turns</code> と <code>--output-format</code> は<b>print mode 専用</b>（interactive では適用外・要件の「非対話」にも違反）。print mode は<b>デフォルトで turn 上限なし</b>なので cap が必要。</div>
+  <div class="doc">公式 doc: Run Claude Code programmatically・CLI reference — <b>Prep未カバー</b></div>
+</div>
+
+<h3>分類 ⑤ 並列隔離パターン（Q47）</h3>
+
+<!-- Q47 -->
+<div class="qcard silent">
+  <div class="qhead"><span class="qnum">Q47</span><span class="pill p1">D2 Apps &amp; Integration</span><span class="pill p-sub">単選</span><span class="pill p-info">Silent miss</span></div>
+  <div class="small">都市計画 software vendor。Claude Code で<b>3競合 refactor</b> を試行。各 attempt は多数 file 修正・test 実行。diff を side by side 比較・human が最良設計選択前に attempt が別を上書き回避。</div>
+  <div class="opt you">file 編集を全計画完了まで無効化・1統合 pass で全計画変更を適用</div>
+  <div class="opt correct">各 attempt ごとに別 git worktree・独立 Claude Code session を各 checkout で実行</div>
+  <div class="qgap"><b>ギャップ:</b> <b>git worktrees</b>=filesystem + branch で隔離（session は directory 紐付・各実験が自由に編集/test・diff 比較容易）。branch switch は<b>会話履歴が残留</b>し混入。same checkout は衝突。統合 pass は「比較」の目的を損う。→ 並列実験は worktree 一択。</div>
+  <div class="doc">公式 doc: Claude Code overview・Create custom subagents — <b>Prep未カバー</b></div>
+</div>
+
+<h3>分類 ⑥ Structured Outputs の境界（Q51）</h3>
+
+<!-- Q51 -->
+<div class="qcard silent">
+  <div class="qhead"><span class="qnum">Q51</span><span class="pill p1">D6 Prompt &amp; Context</span><span class="pill p-sub">単選</span><span class="pill p1">Caught</span></div>
+  <div class="small">保険 underwriting。Claude <b>Opus 4.8</b> で claim notes 分類・下游 routing。legacy queue 名 <code>Review Needed</code>/<code>Review needed</code>（大文字小文字のみ相違・別 team）。parse 可能 JSON・出力取扱前提の誤 routing 回避。</div>
+  <div class="opt you">prompt で JSON 要求・最初の object parse・syntax error のみ retry</div>
+  <div class="opt correct"><code>output_config.format</code> で stable な non-casing status codes 露出・stop reasons check・codes を queues に map</div>
+  <div class="qgap"><b>ギャップ:</b> ① Structured Outputs（<code>output_config.format</code>+JSON Schema）が schema 保証の正道（prompt+parse+retry は非公式）。② ただし <b>enum の casing は保証されない</b>（大文字小文字のみ相違は誤 route）→ stable code に置換。③ <b>stop_reason</b>（refusal/max_tokens）check 必須。④ <b>prefill は JSON と両立不可</b>・Opus 4.8 は prefill 非対応。</div>
+  <div class="prep">M2 m2:121/136/141（output constraints / output_config.format）</div>
+</div>
+
+<!-- Silent miss 分析 -->
+<h2>Part B 補足 — Silent miss 4 問（自信があったが間違い）</h2>
+<div class="card">
+  <p>誤答8のうち <b>★marked（自覚済）は4問</b>（Q12,13,18,51）。残り <b>4問は自信があったのに間違えた「Silent miss」</b>。自覚精度は Exam1（silent 6 / caught 4）から改善したが、本番で最も危険なのはこの Silent。</p>
+  <table>
+    <thead><tr><th class="num">問</th><th>Domain</th><th>見落とした知識</th><th>潰す場所</th></tr></thead>
+    <tbody>
+      <tr><td class="num">Q6</td><td>D1</td><td>Agent SDK（ローカル・loop組込）vs Managed Agents（クラウドsandbox）</td><td>M2 m2:734</td></tr>
+      <tr><td class="num">Q20</td><td>D3</td><td>print mode 専用 flag（<code>--max-turns</code>/<code>--output-format</code>）</td><td>公式 doc</td></tr>
+      <tr><td class="num">Q44</td><td>D1</td><td>Workflow tool（大規模 fan-out）vs subagents（少数）</td><td>M2 m2:1409</td></tr>
+      <tr><td class="num">Q47</td><td>D2</td><td>git worktrees（filesystem+branch 隔離）</td><td>公式 doc</td></tr>
+    </tbody>
+  </table>
+  <div class="warn-note"><b>Silent miss の共通:</b> 「自明に見える問題」で<b>最もらしい選択肢</b>（Managed Agents / interactive+max-turns / subagent 1個ずつ / 統合 pass）に引っかかった。いずれも<b>部分正しいが要件を満たさない</b>。→ 自信があるほど選択肢を<b>全つぶし</b>する習慣が対策。</div>
+</div>
+
+<!-- Part C: Exam1/Exam2 統合 -->
+<h2>Part C — Exam1/Exam2 統合分析（106 問・18 誤答）</h2>
+<div class="card">
+  <p class="small">2 試験を統合（Exam1: 43/53・Exam2: 44/53 = <b>計 87/106 = 82%</b>）。誤答 18 を<b>トピックグループ</b>で整理し、根本知識の弱点を浮かび上がらせる。</p>
+
+  <h3>重み付き優先度マトリクス（配点 × 不正率）</h3>
+  <div class="matrix">
+    <div class="mc h"></div>
+    <div class="mc h">高配点（≥11%）</div>
+    <div class="mc h">低配点（&lt;11%）</div>
+
+    <div class="mc axis">低正答率（&lt;80%）</div>
+    <div class="mc cell">
+      <span class="pill p0">🔴 最優先</span><br>
+      <span class="tag-d">D1 Agents 14.7% / 69%</span><br>
+      <span class="tag-d">D8 Tools&amp;MCPs 10.6% / 75%</span>
+    </div>
+    <div class="mc cell">
+      <span class="pill p1">🟡 知識ギャップ</span><br>
+      <span class="tag-d">D3 Claude Code 3.1% / 75%</span>
+    </div>
+
+    <div class="mc axis">高正答率（≥80%）</div>
+    <div class="mc cell">
+      <span class="pill p1">🟡 確信不足・維持</span><br>
+      <span class="tag-d">D2 Apps 33.1% / 85%</span><br>
+      <span class="tag-d">D5 Model Sel 16.8% / 89%</span><br>
+      <span class="tag-d">D6 Prompt 11.0% / 83%</span>
+    </div>
+    <div class="mc cell">
+      <span class="pill p2">🟢 維持</span><br>
+      <span class="tag-d">D7 Security 8.1% / 88%</span><br>
+      <span class="tag-d">D4 Eval 2.6% / 100%</span>
+    </div>
+  </div>
+
+  <table style="margin-top:18px">
+    <thead><tr><th>Domain</th><th class="num">配点</th><th class="num">2試験題</th><th class="num">2試験誤</th><th class="num">正答率</th><th class="num">配点×不正</th><th>優先</th></tr></thead>
+    <tbody>
+      <tr><td>D1 Agents &amp; Workflows</td><td class="num">14.7%</td><td class="num">16</td><td class="num delta-bad">5</td><td class="num delta-bad">69%</td><td class="num">4.6</td><td><span class="pill p0">P0</span></td></tr>
+      <tr><td>D2 Applications &amp; Integration</td><td class="num">33.1%</td><td class="num">34</td><td class="num">5</td><td class="num">85%</td><td class="num">5.0</td><td><span class="pill p1">P1</span></td></tr>
+      <tr><td>D8 Tools &amp; MCPs</td><td class="num">10.6%</td><td class="num">12</td><td class="num">3</td><td class="num">75%</td><td class="num">2.7</td><td><span class="pill p1">P1</span></td></tr>
+      <tr><td>D6 Prompt &amp; Context</td><td class="num">11.0%</td><td class="num">12</td><td class="num">2</td><td class="num">83%</td><td class="num">1.9</td><td><span class="pill p1">P1</span></td></tr>
+      <tr><td>D5 Model Selection</td><td class="num">16.8%</td><td class="num">18</td><td class="num">2</td><td class="num">89%</td><td class="num">1.8</td><td><span class="pill p1">P1</span></td></tr>
+      <tr><td>D7 Security</td><td class="num">8.1%</td><td class="num">8</td><td class="num">1</td><td class="num">88%</td><td class="num">1.0</td><td><span class="pill p2">P2</span></td></tr>
+      <tr><td>D3 Claude Code</td><td class="num">3.1%</td><td class="num">4</td><td class="num">1</td><td class="num">75%</td><td class="num">0.8</td><td><span class="pill p2">P2</span></td></tr>
+      <tr><td>D4 Eval</td><td class="num">2.6%</td><td class="num">2</td><td class="num">0</td><td class="num delta-ok">100%</td><td class="num">0</td><td><span class="pill p2">維持</span></td></tr>
+    </tbody>
+  </table>
+
+  <h3>誤答 18 問のトピックグループ化</h3>
+  <table>
+    <thead><tr><th>トピックグループ</th><th class="num">問数</th><th>該当問</th><th>主戦場</th></tr></thead>
+    <tbody>
+      <tr><td><b>① ツール/Agent 原語の選別</b><br><span class="small">client tool / MCP / Skill / server tool / Agent SDK / Client SDK / Managed Agents</span></td><td class="num">5</td><td>Exam1: 22,23,41 / Exam2: 6,12</td><td>M2・M3</td></tr>
+      <tr><td><b>② Workflow / orchestration pattern</b><br><span class="small">orchestrator-workers / routing / chaining / Workflow tool / subagents / query vs ClaudeSDKClient</span></td><td class="num">3</td><td>Exam1: 20 / Exam2: 13,44</td><td>M2・M4</td></tr>
+      <tr><td><b>③ Prompt/Context 機構</b><br><span class="small">prefill / context editing / Structured Outputs</span></td><td class="num">3</td><td>Exam1: 33 / Exam2: 18,51</td><td>M2・公式</td></tr>
+      <tr><td><b>④ Claude Code 実行/設定</b><br><span class="small">CLI override / print mode / worktrees / 設定階層</span></td><td class="num">3</td><td>Exam1: 44 / Exam2: 20,47</td><td>公式 doc</td></tr>
+      <tr><td><b>⑤ 新モデル機構</b><span class="small">（Exam2 で克服）</span><br><span class="small">effort / Haiku routing / thinking 課金 / cache_control</span></td><td class="num">2</td><td>Exam1: 15,34</td><td>—</td></tr>
+      <tr><td>⑥ Skill versioning</td><td class="num">1</td><td>Exam1: 5</td><td>M3・M5</td></tr>
+      <tr><td>⑦ Security（injection/trust）<span class="small">（Exam2 で克服）</span></td><td class="num">1</td><td>Exam1: 50</td><td>—</td></tr>
+    </tbody>
+  </table>
+  <div class="warn-note"><b>統合の核心:</b> 18 誤答の<b>過半数（11問）</b>が <b>グループ①+②+③</b>＝「Agent/Tool/Prompt の<b>選別・使い分け</b>」に集約される。これは全て <b>Prep M2</b>（+ 一部 M3・公式 doc）で潰せる。一方グループ④（Claude Code 実行）3問は<b>Prep 未カバー</b>で公式 doc 必須。グループ⑤⑦（4問）は Exam2 で既に克服済み。</div>
+
+  <h3>marked vs incorrect のギャップ診断（Exam2）</h3>
+  <table>
+    <thead><tr><th>Domain</th><th class="num">marked（自覚）</th><th class="num">incorrect（実害）</th><th>診断</th></tr></thead>
+    <tbody>
+      <tr><td>D2 Apps</td><td class="num">7</td><td class="num">1 (silent)</td><td>知識あるが迷い多い → <b>演習で確度</b></td></tr>
+      <tr><td>D5 Model Selection</td><td class="num">6</td><td class="num">0</td><td><b>6問迷って全問正解</b> = 確信不足（知識はある）</td></tr>
+      <tr><td>D6 Prompt</td><td class="num">4</td><td class="num">2</td><td>半分落とす → 境界知識を補強</td></tr>
+      <tr><td>D1 Agents</td><td class="num">4</td><td class="num">4</td><td>迷って落とす + 無自覚に落とす = <b>知識が浅い</b></td></tr>
+      <tr><td>D8 Tools/MCPs</td><td class="num">3</td><td class="num">0</td><td>Exam1 弱点→Exam2 安定</td></tr>
+      <tr><td>D7 Security</td><td class="num">2</td><td class="num">0</td><td>安定</td></tr>
+    </tbody>
+  </table>
+  <div class="note"><b>診断の意味:</b> D5 と D2 は「迷ったが正解」が多く<b>知識はあるが確信不足</b>（演習量で解決）。D1 は「迷って落とす + Silent で落とす」が混在し<b>知識そのものが浅い</b>（Prep M2 の精読で解決）。→ D1 は「読む」、D5/D2 は「解く」。</div>
+</div>
+
+<!-- Part D: 復習計画 -->
+<h2>Part D — 腰を据えた復習計画（核心）</h2>
+<div class="card">
+  <p class="small">Exam1 弱点は Exam2 で克服したが、<b>別領域が崩れた</b>。本番前は<b>領域単位でなくトピック単位</b>で根本知識を固める。Prep M2 が主戦場、3 トピックは公式 doc 補完。</p>
+
+  <div class="pri-card p0c">
+    <div class="pri-head">🔴 P0 — 本番前に必ず完了 <span class="pri-time">目安: 約120分</span></div>
+
+    <h4 style="margin-top:10px">① Prep <b>M2</b> 徹底 — Agent / Workflow / Tool の選別 <span class="pri-time">約60分</span></h4>
+    <ul>
+      <li><b>対象:</b> トピックグループ①②③（11問）+ D1 知識不足の根本解決</li>
+      <li><b>読む箇所（行番号確定）:</b>
+        <ul>
+          <li><b>m2:734</b> — 3 つの wiring paths（Messages API 直接 / Agent SDK / Managed Agents）＝ <b>Q6/Q12 の核心</b></li>
+          <li><b>m2:1386</b> — "Building Effective Agents"（chaining/routing/parallelization/evaluator-optimizer）＝ <b>Q13 の核心</b></li>
+          <li><b>m2:1401</b> — Claude Agent SDK 定義（<code>@anthropic-ai/claude-agent-sdk</code>・Anthropic SDK との区別）</li>
+          <li><b>m2:1409</b> — Subagent 定義（隔離 context・少数委任）＝ <b>Q44 の核心（vs Workflow tool）</b></li>
+          <li><b>m2:121/136/141</b> — output constraints / <code>output_config.format</code>（Structured Outputs）＝ <b>Q51 の核心</b></li>
+        </ul>
+      </li>
+      <li><b>M3 補強:</b> m3:211（Subagents）・m3:319/339（Managed Agents beta）</li>
+      <li><b>M4 補強:</b> m4:617/631（orchestrator-worker pattern・コスト15倍例）＝ Q13 の裏付け</li>
+    </ul>
+
+    <h4>② 公式 doc 補完 — Prep 未カバーの 3 トピック <span class="pri-time">約45分</span></h4>
+    <ul>
+      <li><b>context editing / <code>clear_tool_uses_20250919</code></b>（Q18）→ 公式 doc「Context windows」。server-side 編集 vs caching vs application storage の 3 区別</li>
+      <li><b>Claude Code print mode</b>（Q20）→ 公式 doc「Run Claude Code programmatically」+「CLI reference」。<code>-p</code>/<code>--max-turns</code>/<code>--output-format json/stream-json</code></li>
+      <li><b>git worktrees</b>（Q47）→ 公式 doc「Claude overview」「Create custom subagents」。filesystem+branch 隔離・会話履歴との分離</li>
+    </ul>
+    <div class="warn-note" style="margin-top:8px"><b>注意:</b> この 3 トピックは Prep コースに<b>記述がない</b>（grep 検証済み）。放置すると本番でも Silent miss になる。公式 doc を<code>1枚ずつ</code>読んで<b>自分の言葉で要約</b>すること。</div>
+  </div>
+
+  <div class="pri-card p1c">
+    <div class="pri-head">🟡 P1 — 演習で確度アップ <span class="pri-time">目安: 約40分</span></div>
+    <h4 style="margin-top:10px">③ D5 Model Selection — 「迷って正解」を「確信して正解」へ</h4>
+    <ul>
+      <li>Exam2 で100%だが<b>6問 marked</b>＝確信不足。知識はあるので<b>演習量</b>で確度を上げる（Prep 丸読みより m4:617/631 と問題演習）</li>
+      <li>M1 S03（<code>effort</code>・モデル family）・M4 S10A/B（routing・tradeoff）は Exam1 で弱点→Exam2 で克服済み。維持</li>
+    </ul>
+    <h4>④ D2 Apps — 安定維持（配点33%・最大）</h4>
+    <ul>
+      <li>正答率85%で安定だが<b>題数が最多（34問）</b>。1問の配点的価値が最大。Worktrees（Q47）は P0 の公式 doc で対応。他は散発</li>
+    </ul>
+    <h4>⑤ D6 Prompt — Structured Outputs の境界</h4>
+    <ul>
+      <li>Q51（output_config.format・casing・stop_reason・prefill 不可）は P0①の M2 m2:121-141 で潰す。context editing（Q18）も P0②で対応</li>
+    </ul>
+  </div>
+
+  <div class="pri-card p2c">
+    <div class="pri-head">🟢 P2 — メンテナンス・スポット <span class="pri-time">必要時</span></div>
+    <ul>
+      <li><b>D8 Tools/MCPs:</b> Exam1 50%→Exam2 100%。M3 S12-14（MCP primitives・transports）は Exam1 で読んだ前提。忘却曲線で近いうちに軽く復習（詳細は <a href="../sundog-exam1/weakness-analysis.html">Exam1分析</a> 参照）</li>
+      <li><b>D7 Security:</b> Exam1 75%→Exam2 100%。M4 S14-16 は Exam1 で読んだ前提。維持</li>
+      <li><b>D3 Claude Code:</b> 題数2問のみ。print mode（Q20）は P0②で対応</li>
+    </ul>
+  </div>
+
+  <div class="pri-card" style="background:rgba(96,165,250,.06);border-color:rgba(96,165,250,.3)">
+    <div class="pri-head" style="color:var(--info)">⏭ スキップ可</div>
+    <ul class="small" style="margin-bottom:0">
+      <li><b>D4 Eval（100%）</b>: 題数1問・重み2.6%・両試験で正解。深掘り不要</li>
+    </ul>
+  </div>
+</div>
+
+<!-- 受験技法 -->
+<h2>受験技法 — Silent miss &amp; 多選択対策</h2>
+<div class="card">
+  <h3>Silent miss 対策（Exam2: 4問 / Exam1: 6問）</h3>
+  <p>Silent miss =「自信があったが誤」。本番で最も危険。<b>自信があるほど選択肢を全つぶし</b>する習慣が唯一の対策。</p>
+  <ul>
+    <li><b>① 「自明」に見えたら警鐘</b> — Q6/20/44/47 はいずれも「これは分かる」と踏んで最もらしい選択肢を選んだ。最もらしいほど<b>要件との照合</b>を怠らない</li>
+    <li><b>② 全選択肢に「なぜこれはダメか」を一言ずつ</b> — 説明不能な選択肢が残ればそれが正解候補</li>
+    <li><b>③ "best fits" / "Which TWO" で止まらない</b> — 1つ選んで安心せず、残りを全評価</li>
+  </ul>
+  <h3>多選択「2問目漏れ」対策（継続）</h3>
+  <p>Exam1 で 5/10 問・Exam2 では軽減傾向（Q20 のみ複選で1つ正解→もう1つ漏選）。本番でも継続警戒。</p>
+  <ul>
+    <li><b>① 確実に正解を1つ選んだら止まらない</b></li>
+    <li><b>② 残り全選択肢に「これも正解になり得るか」を問う</b> — 特に「〜も要件を満たす」「〜も同様に有効」の<b>並列構造</b>に警戒</li>
+    <li><b>③ "Which TWO" を再確認</b> — 1つしか選んでなければ<b>必ずもう1つある</b></li>
+  </ul>
+</div>
+
+<!-- 次アクション -->
+<h2>次のアクション</h2>
+<div class="card">
+  <ul>
+    <li><b>本日〜:</b> P0①（Prep M2 徹底・約60分）→ P0②（公式 doc 3トピック・約45分）</li>
+    <li><b>その後:</b> <b>Exam3 を受験</b>（同パック最終）。D1/D6 の正答率が上がったか検証</li>
+    <li><b>Exam3 後:</b> 本 HTML フォーマットで 3 試験統合分析（159 問）</li>
+    <li><b>本番（720/1000）</b> — 現在 2 試験平均 82% で通過線 +10pt。D1（69%）を 80% まで引き上げれば本番 720 は十分狙える</li>
+    <li>本番前日に本 HTML の「Part C トピックグループ」と「Part D P0」を総ざらい</li>
+  </ul>
+  <div class="note"><b>現状地力:</b> 配点の大きい D2(85%)+D5(89%)+D1(69%) = 重み 64.6% で加重平均 約 82%。D1 を 69%→80% に上げると加重平均 +1.6pt。<b>最大の伸び代は D1（知識が浅い＝学習で確実に上がる）</b>。D5/D2 は確信不足なので演習量、D1 は Prep 精読で質を変える。</div>
+</div>
+
+<div class="footer">
+  データソース: <code>Exam2/{Results,incorrect,marked,all}.webarchive</code>（python3.12 plistlib 抽出）・<code>tasks/prep-course-raw/m{2,3,4}-*.md</code>（grep で行番号確定）<br>
+  姉妹: <a href="../sundog-exam1/weakness-analysis.html">Exam1 弱点分析</a> · <a href="../sundog-exam1/quality-evaluation.html">Exam1 品質評価</a> · <a href="../README.md">タスク管理</a>
+</div>
+
+</div>
+</body>
+</html>
