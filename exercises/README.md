@@ -21,6 +21,15 @@
 | [`sundog-exam1/weakness-analysis.html`](./sundog-exam1/weakness-analysis.html) / [.pdf](./sundog-exam1/weakness-analysis.pdf) | 自身の苦手分野の分析と優先復習案 |
 | [`sundog-exam2/exam2-review.html`](./sundog-exam2/exam2-review.html) / [.pdf](./sundog-exam2/exam2-review.pdf) | Exam2 の分析 ＋ Exam1/Exam2 統合復習計画（弱点の振り子・誤答18問のトピックグループ化・Prep 優先順位） |
 
+## Sundog 本番シミュレーション（Purcell 難易度改題）
+
+Sundog 模試は distractor が易しすぎた（知識がなくても消去法で解ける）ため、[Purcell](https://www.linkedin.com/in/purcellmatthew) スタイル（厳しい distractor・「良い答え vs 最良の答え」で迷う設計）に改題した本番シミュレーション問題集です。Udemy と同じ操作感（120 分タイマー・Finish Exam → スコア / 領域別 / 全問レビュー）。解説は自然な日本語。各問題は Sundog のシナリオ・知識ポイントを踏襲しつつ、別の具体例にパラフレーズし、distractor と解説は完全オリジナルに書き下ろしています。
+
+| ファイル | 内容 |
+|---|---|
+| [`sundog-hardened/exam1-hardened.html`](./sundog-hardened/exam1-hardened.html) | Sundog Exam1（53 問）を Purcell 難易度に改題・日本語 |
+| [`sundog-hardened/exam2-hardened.html`](./sundog-hardened/exam2-hardened.html) | Sundog Exam2（53 問）を Purcell 難易度に改題・日本語 |
+
 ## 使い方
 
 1. HTML ファイルをブラウザ（Safari / Chrome など）で開く
