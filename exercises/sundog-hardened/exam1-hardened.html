@@ -128,7 +128,7 @@ const QUESTIONS = [{"qid": "exam1-q1", "domain": "Agents and Workflows", "type":
 const TOTAL = QUESTIONS.length;
 const DOMAIN_ORDER = ["Agents and Workflows", "Applications and Integration", "Claude Code", "Eval, Testing, and Debugging", "Model Selection and Optimization", "Prompt and Context Engineering", "Security and Safety", "Tools and MCPs"];
 const TIME_LIMIT = 120*60;
-let state = { answers:{}, marked:new Set(), cur:0, finished:false, timeLeft:TIME_LIMIT };
+let state = { answers:{}, marked:new Set(), cur:0, finished:false, timeLeft:TIME_LIMIT, started:false };
 const LS_KEY = 'ccdvf-hardened-exam1';
 
 function load(){ try{ const s=JSON.parse(localStorage.getItem(LS_KEY)); if(s){state.answers=s.answers||{}; state.marked=new Set(s.marked||[]); state.cur=s.cur||0; state.finished=s.finished||false; state.timeLeft=(s.timeLeft!=null)?s.timeLeft:TIME_LIMIT;} }catch(e){} }
@@ -148,7 +148,7 @@ function finishExam(){ if(!confirm('Finish the exam? 採点して結果を表示
 function renderResults(){ document.getElementById('exam').classList.add('hidden'); document.getElementById('results').classList.remove('hidden'); let correct=0; const byDomain={}; const di={}; QUESTIONS.forEach((q,i)=>{ const ok=isCorrect(i); if(ok) correct++; const d=q.domain; byDomain[d]=byDomain[d]||{tot:0,ok:0}; byDomain[d].tot++; if(ok) byDomain[d].ok++; di[i]=ok; }); const pct=Math.round(correct/TOTAL*100); const pass=pct>=72; let rows=DOMAIN_ORDER.filter(d=>byDomain[d]).map(d=>{ const b=byDomain[d]; const p=Math.round(b.ok/b.tot*100); return `<tr><td>${d}</td><td class="num">${b.tot}</td><td class="num">${b.ok}</td><td class="num">${p}%</td><td><div class="bar-cell"><div style="width:${p}%"></div></div></td></tr>`; }).join(''); let cards=QUESTIONS.map((q,i)=>{ const ok=di[i]; const ans=state.answers[i]||[]; const corr=correctIdx(q); let oh=''; q.options.forEach((o,oi)=>{ let cls='opt'; let pre=''; if(o.is_correct) cls+=' correct'; if(ans.includes(oi)&&!o.is_correct){ cls+=' you-wrong'; } oh+=`<div class="${cls}">${o.text}<div class="why">${o.why}</div></div>`; }); const mk=state.marked.has(i)?`<span class="st marked">Marked</span>`:''; return `<div class="rq" id="rq${i}"><div class="rhead" onclick="this.parentNode.classList.toggle('open')"><span class="st ${ok?'correct':'incorrect'}">${ok?'Correct':'Incorrect'}</span>${mk}<span class="qno">Question ${i+1}</span><span class="pill" style="background:#ecebfb;color:#8710d8;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600">${q.domain}</span><span class="hint">▶ Explain this further</span></div><div class="rbody"><div class="scenario">${q.scenario}</div>${oh}<div class="exp"><b>解説:</b> ${q.explanation}</div></div></div>`; }).join(''); document.getElementById('results').innerHTML=` <div class="results-hero"><div class="score ${pass?'pass':'fail'}">${correct}/${TOTAL} · ${pct}%</div><div class="sub">${pass?'合格（72%以上）':'不合格（72%未満）'} · ${ Object.values(di).filter(x=>x).length } 正答 / ${TOTAL-correct} 不正答</div></div> <h3 style="margin:18px 0 8px">Domains</h3><table class="dtable"><tr><th>Domain</th><th class="num">題数</th><th class="num">正答</th><th class="num">正答率</th><th></th></tr>${rows}</table> <h3 style="margin:24px 0 8px">Question review (クリックで解説展開)</h3> <div class="filters"><button class="on" onclick="filterReview(this,'all')">All</button><button onclick="filterReview(this,'incorrect')">Incorrect</button><button onclick="filterReview(this,'marked')">Marked</button></div> ${cards}`; window.scrollTo(0,0); }
 function filterReview(btn,f){ document.querySelectorAll('.filters button').forEach(b=>b.classList.remove('on')); btn.classList.add('on'); document.querySelectorAll('.rq').forEach((el,i)=>{ let show=true; if(f==='incorrect') show=!isCorrect(i); if(f==='marked') show=state.marked.has(i); el.style.display=show?'':'none'; }); }
 
-function tick(){ if(state.finished) return; if(state.timeLeft>0) state.timeLeft--; const m=Math.floor(state.timeLeft/60), s=state.timeLeft%60; const t=document.getElementById('timer'); t.textContent=(m<10?'0':'')+m+':'+(s<10?'0':'')+s; t.classList.toggle('warn', state.timeLeft<=300); if(state.timeLeft<=0){ state.finished=true; save(); renderResults(); } else save(); }
+function tick(){ if(!state.started || state.finished) return; if(state.timeLeft>0) state.timeLeft--; const m=Math.floor(state.timeLeft/60), s=state.timeLeft%60; const t=document.getElementById('timer'); t.textContent=(m<10?'0':'')+m+':'+(s<10?'0':'')+s; t.classList.toggle('warn', state.timeLeft<=300); if(state.timeLeft<=0){ state.finished=true; save(); renderResults(); } else save(); }
 
 load();
 function showIntro(){
@@ -170,7 +170,7 @@ function showIntro(){
   }
 }
 function startExam(resume){
-  if(!resume){ state={answers:{},marked:new Set(),cur:0,finished:false,timeLeft:TIME_LIMIT}; save(); }
+  if(!resume){ state={answers:{},marked:new Set(),cur:0,finished:false,timeLeft:TIME_LIMIT,started:true}; save(); }
   else { load(); }
   document.getElementById('intro').classList.add('hidden');
   document.getElementById('finishBtn').classList.remove('hidden');
