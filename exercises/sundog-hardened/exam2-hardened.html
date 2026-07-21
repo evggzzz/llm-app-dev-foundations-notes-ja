@@ -102,6 +102,9 @@ header.bar button:hover{background:var(--udemy-d);}
     <div id="resumeInfo" class="hidden" style="background:#f0f1f3;border-radius:8px;padding:12px 16px;margin-bottom:14px;font-size:14px"></div>
     <button id="startBtn" onclick="startExam(false)" style="background:var(--udemy);color:#fff;border:none;padding:12px 34px;border-radius:8px;font-size:16px;font-weight:700;cursor:pointer">▶ Start Exam</button>
     <button id="resumeBtn" onclick="startExam(true)" class="hidden" style="background:var(--card);color:var(--udemy-d);border:1px solid var(--udemy);padding:12px 28px;border-radius:8px;font-size:15px;font-weight:600;cursor:pointer;margin-left:10px"></button>
+    <button onclick="showReview()" style="display:block;margin-top:14px;background:var(--card);color:var(--ink);border:1px solid var(--line);padding:10px 24px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer">📖 問題と解説を表示（学習モード・採点なし）</button>
+    <h3 id="histTitle" class="hidden" style="margin-top:26px;border-left:4px solid var(--udemy);padding-left:10px">受験履歴</h3>
+    <div id="history"></div>
   </div>
 </div>
 <div class="wrap">
@@ -130,6 +133,7 @@ const DOMAIN_ORDER = ["Agents and Workflows", "Applications and Integration", "C
 const TIME_LIMIT = 120*60;
 let state = { answers:{}, marked:new Set(), cur:0, finished:false, timeLeft:TIME_LIMIT, started:false };
 const LS_KEY = 'ccdvf-hardened-exam2';
+const LS_HIST = LS_KEY+'-history';
 
 function load(){ try{ const s=JSON.parse(localStorage.getItem(LS_KEY)); if(s){state.answers=s.answers||{}; state.marked=new Set(s.marked||[]); state.cur=s.cur||0; state.finished=s.finished||false; state.timeLeft=(s.timeLeft!=null)?s.timeLeft:TIME_LIMIT;} }catch(e){} }
 function save(){ localStorage.setItem(LS_KEY, JSON.stringify({answers:state.answers, marked:[...state.marked], cur:state.cur, finished:state.finished, timeLeft:state.timeLeft})); }
@@ -144,7 +148,16 @@ function render(){ if(state.finished){ renderResults(); return; } document.getEl
 function toggleMark(){ if(state.marked.has(state.cur)) state.marked.delete(state.cur); else state.marked.add(state.cur); save(); render(); }
 function go(d){ state.cur=Math.max(0,Math.min(TOTAL-1,state.cur+d)); save(); render(); window.scrollTo(0,0); }
 
-function finishExam(){ if(!confirm('Finish the exam? 採点して結果を表示します。')) return; state.finished=true; save(); renderResults(); }
+function finishExam(){ if(!confirm('Finish the exam? 採点して結果を表示します。')) return; state.finished=true; save(); saveResult(); renderResults(); }
+function saveResult(){
+  let correct=0; const byDomain={};
+  QUESTIONS.forEach((q,i)=>{ const ok=isCorrect(i); if(ok) correct++; const d=q.domain; byDomain[d]=byDomain[d]||{tot:0,ok:0}; byDomain[d].tot++; if(ok) byDomain[d].ok++; });
+  const pct=Math.round(correct/TOTAL*100);
+  const answered=Object.values(state.answers).filter(a=>a&&a.length).length;
+  const rec={date:new Date().toLocaleString('ja-JP',{year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'}), score:correct, total:TOTAL, pct, pass:pct>=72, answered, marked:state.marked.size, timeUsed:TIME_LIMIT-state.timeLeft};
+  let hist; try{ hist=JSON.parse(localStorage.getItem(LS_HIST)||'[]'); }catch(e){ hist=[]; }
+  hist.unshift(rec); localStorage.setItem(LS_HIST, JSON.stringify(hist.slice(0,20)));
+}
 function renderResults(){ document.getElementById('exam').classList.add('hidden'); document.getElementById('results').classList.remove('hidden'); let correct=0; const byDomain={}; const di={}; QUESTIONS.forEach((q,i)=>{ const ok=isCorrect(i); if(ok) correct++; const d=q.domain; byDomain[d]=byDomain[d]||{tot:0,ok:0}; byDomain[d].tot++; if(ok) byDomain[d].ok++; di[i]=ok; }); const pct=Math.round(correct/TOTAL*100); const pass=pct>=72; let rows=DOMAIN_ORDER.filter(d=>byDomain[d]).map(d=>{ const b=byDomain[d]; const p=Math.round(b.ok/b.tot*100); return `<tr><td>${d}</td><td class="num">${b.tot}</td><td class="num">${b.ok}</td><td class="num">${p}%</td><td><div class="bar-cell"><div style="width:${p}%"></div></div></td></tr>`; }).join(''); let cards=QUESTIONS.map((q,i)=>{ const ok=di[i]; const ans=state.answers[i]||[]; const corr=correctIdx(q); let oh=''; q.options.forEach((o,oi)=>{ let cls='opt'; let pre=''; if(o.is_correct) cls+=' correct'; if(ans.includes(oi)&&!o.is_correct){ cls+=' you-wrong'; } oh+=`<div class="${cls}">${o.text}<div class="why">${o.why}</div></div>`; }); const mk=state.marked.has(i)?`<span class="st marked">Marked</span>`:''; return `<div class="rq" id="rq${i}"><div class="rhead" onclick="this.parentNode.classList.toggle('open')"><span class="st ${ok?'correct':'incorrect'}">${ok?'Correct':'Incorrect'}</span>${mk}<span class="qno">Question ${i+1}</span><span class="pill" style="background:#ecebfb;color:#8710d8;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600">${q.domain}</span><span class="hint">▶ Explain this further</span></div><div class="rbody"><div class="scenario">${q.scenario}</div>${oh}<div class="exp"><b>解説:</b> ${q.explanation}</div></div></div>`; }).join(''); document.getElementById('results').innerHTML=` <div class="results-hero"><div class="score ${pass?'pass':'fail'}">${correct}/${TOTAL} · ${pct}%</div><div class="sub">${pass?'合格（72%以上）':'不合格（72%未満）'} · ${ Object.values(di).filter(x=>x).length } 正答 / ${TOTAL-correct} 不正答</div></div> <h3 style="margin:18px 0 8px">Domains</h3><table class="dtable"><tr><th>Domain</th><th class="num">題数</th><th class="num">正答</th><th class="num">正答率</th><th></th></tr>${rows}</table> <h3 style="margin:24px 0 8px">Question review (クリックで解説展開)</h3> <div class="filters"><button class="on" onclick="filterReview(this,'all')">All</button><button onclick="filterReview(this,'incorrect')">Incorrect</button><button onclick="filterReview(this,'marked')">Marked</button></div> ${cards}`; window.scrollTo(0,0); }
 function filterReview(btn,f){ document.querySelectorAll('.filters button').forEach(b=>b.classList.remove('on')); btn.classList.add('on'); document.querySelectorAll('.rq').forEach((el,i)=>{ let show=true; if(f==='incorrect') show=!isCorrect(i); if(f==='marked') show=state.marked.has(i); el.style.display=show?'':'none'; }); }
 
@@ -168,6 +181,12 @@ function showIntro(){
       const rb=document.getElementById('resumeBtn'); rb.textContent=lbl; rb.classList.remove('hidden');
     }catch(e){}
   }
+  let hist; try{ hist=JSON.parse(localStorage.getItem(LS_HIST)||'[]'); }catch(e){ hist=[]; }
+  const hEl=document.getElementById('history');
+  if(hist&&hist.length){
+    document.getElementById('histTitle').classList.remove('hidden');
+    hEl.innerHTML='<table class="dtable"><tr><th>日時</th><th class="num">スコア</th><th class="num">正答率</th><th>合否</th><th class="num">回答</th><th class="num">所要</th></tr>'+hist.map(function(r){ return '<tr><td>'+r.date+'</td><td class="num">'+r.score+'/'+r.total+'</td><td class="num">'+r.pct+'%</td><td>'+(r.pass?'<span style="color:var(--ok)">合格</span>':'<span style="color:var(--bad)">不合格</span>')+'</td><td class="num">'+r.answered+'</td><td class="num">'+Math.floor(r.timeUsed/60)+'分</td></tr>'; }).join('')+'</table>';
+  } else { document.getElementById('histTitle').classList.add('hidden'); hEl.innerHTML=''; }
 }
 function startExam(resume){
   if(!resume){ state={answers:{},marked:new Set(),cur:0,finished:false,timeLeft:TIME_LIMIT,started:true}; save(); }
@@ -180,6 +199,18 @@ function saveAndExit(){
   save();
   alert('進捗を保存しました。次回「途中から再開」で続きからどうぞ。');
   showIntro();
+}
+function showReview(){
+  document.getElementById('intro').classList.add('hidden');
+  document.getElementById('exam').classList.add('hidden');
+  document.getElementById('finishBtn').classList.add('hidden');
+  var cards = QUESTIONS.map(function(q,i){
+    var oh=''; q.options.forEach(function(o){ oh += '<div class="opt '+(o.is_correct?'correct':'')+'">'+o.text+'<div class="why">'+o.why+'</div></div>'; });
+    return '<div class="rq open"><div class="rhead"><span class="qno">Question '+(i+1)+'</span><span class="pill" style="background:#ecebfb;color:#8710d8;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600">'+q.domain+'</span><span class="pill" style="background:#e6f4ea;color:#1e8e3e;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600">'+(q.type==='mc'?'MC':'MR')+'</span></div><div class="rbody" style="display:block;padding:0 18px 16px"><div class="scenario">'+q.scenario+'</div>'+oh+'<div class="exp"><b>解説:</b> '+q.explanation+'</div></div></div>';
+  }).join('');
+  document.getElementById('results').innerHTML='<div style="margin-bottom:16px"><button onclick="showIntro()" style="background:var(--card);border:1px solid var(--line);padding:8px 16px;border-radius:6px;cursor:pointer">← 開始画面に戻る</button> <b style="font-size:18px">問題と解説（学習モード・'+TOTAL+'問・採点なし）</b></div>'+cards;
+  document.getElementById('results').classList.remove('hidden');
+  window.scrollTo(0,0);
 }
 showIntro();
 setInterval(tick, 1000);
