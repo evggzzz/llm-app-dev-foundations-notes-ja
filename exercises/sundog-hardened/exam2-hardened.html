@@ -88,6 +88,22 @@ header.bar button:hover{background:var(--udemy-d);}
   <div class="spacer"></div>
   <button id="finishBtn" onclick="finishExam()">Finish Exam</button>
 </header>
+<div id="intro" class="wrap" style="max-width:760px">
+  <div class="results-hero">
+    <div style="color:var(--udemy-d);font-weight:700;font-size:13px;letter-spacing:.05em">CCDV-F PRACTICE EXAM 2</div>
+    <h2 style="margin:6px 0 4px;font-size:26px">Purcell 難易度 本番シミュレーション</h2>
+    <div class="sub" style="margin-bottom:14px">Sundog Exam2 を Purcell スタイル（厳しい distractor）に改題したオリジナル問題集・日本語</div>
+    <ul style="margin:10px 0 16px;line-height:2">
+      <li>問題数: <b>53 問</b>（Multiple Choice 4 択 + Multiple Response 5 択）</li>
+      <li>制限時間: <b>120 分</b>（カウントダウン・0 で自動採点）</li>
+      <li>合格ライン: <b>72%</b></li>
+      <li>回答は自動保存 — 途中で閉じても「途中から再開」で続きから</li>
+    </ul>
+    <div id="resumeInfo" class="hidden" style="background:#f0f1f3;border-radius:8px;padding:12px 16px;margin-bottom:14px;font-size:14px"></div>
+    <button id="startBtn" onclick="startExam(false)" style="background:var(--udemy);color:#fff;border:none;padding:12px 34px;border-radius:8px;font-size:16px;font-weight:700;cursor:pointer">▶ Start Exam</button>
+    <button id="resumeBtn" onclick="startExam(true)" class="hidden" style="background:var(--card);color:var(--udemy-d);border:1px solid var(--udemy);padding:12px 28px;border-radius:8px;font-size:15px;font-weight:600;cursor:pointer;margin-left:10px"></button>
+  </div>
+</div>
 <div class="wrap">
   <!-- Exam view -->
   <div id="exam">
@@ -100,6 +116,7 @@ header.bar button:hover{background:var(--udemy-d);}
       <button id="prevBtn" onclick="go(-1)">◀ Prev</button>
       <span id="qpos" style="color:var(--sub);font-size:13px"></span>
       <button id="nextBtn" class="primary" onclick="go(1)">Next ▶</button>
+      <button onclick="saveAndExit()" style="margin-left:auto;background:var(--card);border:1px solid var(--line)">💾 Save &amp; Exit</button>
     </div>
   </div>
   <!-- Results view -->
@@ -134,7 +151,37 @@ function filterReview(btn,f){ document.querySelectorAll('.filters button').forEa
 function tick(){ if(state.finished) return; if(state.timeLeft>0) state.timeLeft--; const m=Math.floor(state.timeLeft/60), s=state.timeLeft%60; const t=document.getElementById('timer'); t.textContent=(m<10?'0':'')+m+':'+(s<10?'0':'')+s; t.classList.toggle('warn', state.timeLeft<=300); if(state.timeLeft<=0){ state.finished=true; save(); renderResults(); } else save(); }
 
 load();
-if(state.finished) renderResults(); else render();
+function showIntro(){
+  document.getElementById('intro').classList.remove('hidden');
+  document.getElementById('exam').classList.add('hidden');
+  document.getElementById('results').classList.add('hidden');
+  document.getElementById('finishBtn').classList.add('hidden');
+  const raw=localStorage.getItem(LS_KEY);
+  if(raw){
+    try{
+      const s=JSON.parse(raw);
+      const answered=s.answers?Object.values(s.answers).filter(a=>a&&a.length).length:0;
+      const t=s.timeLeft!=null?s.timeLeft:TIME_LIMIT; const m=Math.floor(t/60),sec=t%60;
+      const lbl = s.finished ? '前回の結果を見る' : '途中から再開';
+      document.getElementById('resumeInfo').innerHTML='<b>前回の進捗:</b> '+answered+'/'+TOTAL+' 問回答済み · 残り '+(m<10?'0':'')+m+':'+(sec<10?'0':'')+sec+(s.finished?' · <b>採点済み</b>':'');
+      document.getElementById('resumeInfo').classList.remove('hidden');
+      const rb=document.getElementById('resumeBtn'); rb.textContent=lbl; rb.classList.remove('hidden');
+    }catch(e){}
+  }
+}
+function startExam(resume){
+  if(!resume){ state={answers:{},marked:new Set(),cur:0,finished:false,timeLeft:TIME_LIMIT}; save(); }
+  else { load(); }
+  document.getElementById('intro').classList.add('hidden');
+  document.getElementById('finishBtn').classList.remove('hidden');
+  if(state.finished) renderResults(); else render();
+}
+function saveAndExit(){
+  save();
+  alert('進捗を保存しました。次回「途中から再開」で続きからどうぞ。');
+  showIntro();
+}
+showIntro();
 setInterval(tick, 1000);
 </script>
 </body>
