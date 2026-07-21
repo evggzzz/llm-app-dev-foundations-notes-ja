@@ -154,7 +154,7 @@ async function saveResult(){
   QUESTIONS.forEach((q,i)=>{ const ok=isCorrect(i); if(ok) correct++; const d=q.domain; byDomain[d]=byDomain[d]||{tot:0,ok:0}; byDomain[d].tot++; if(ok) byDomain[d].ok++; });
   const pct=Math.round(correct/TOTAL*100);
   const answered=Object.values(state.answers).filter(a=>a&&a.length).length;
-  const rec={date:new Date().toLocaleString('ja-JP',{year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'}), score:correct, total:TOTAL, pct, pass:pct>=72, answered, marked:state.marked.size, timeUsed:TIME_LIMIT-state.timeLeft};
+  const rec={date:new Date().toLocaleString('ja-JP',{year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'}), score:correct, total:TOTAL, pct, pass:pct>=72, answered, marked:state.marked.size, timeUsed:TIME_LIMIT-state.timeLeft, answers:JSON.parse(JSON.stringify(state.answers)), markedSet:[...state.marked]};
   try{ await fetch('/api/exam-history?exam=2', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(rec)}); }catch(e){ console.warn('history save failed', e); }
 }
 function renderResults(){ document.getElementById('exam').classList.add('hidden'); document.getElementById('results').classList.remove('hidden'); let correct=0; const byDomain={}; const di={}; QUESTIONS.forEach((q,i)=>{ const ok=isCorrect(i); if(ok) correct++; const d=q.domain; byDomain[d]=byDomain[d]||{tot:0,ok:0}; byDomain[d].tot++; if(ok) byDomain[d].ok++; di[i]=ok; }); const pct=Math.round(correct/TOTAL*100); const pass=pct>=72; let rows=DOMAIN_ORDER.filter(d=>byDomain[d]).map(d=>{ const b=byDomain[d]; const p=Math.round(b.ok/b.tot*100); return `<tr><td>${d}</td><td class="num">${b.tot}</td><td class="num">${b.ok}</td><td class="num">${p}%</td><td><div class="bar-cell"><div style="width:${p}%"></div></div></td></tr>`; }).join(''); let cards=QUESTIONS.map((q,i)=>{ const ok=di[i]; const ans=state.answers[i]||[]; const corr=correctIdx(q); let oh=''; q.options.forEach((o,oi)=>{ let cls='opt'; let pre=''; if(o.is_correct) cls+=' correct'; if(ans.includes(oi)&&!o.is_correct){ cls+=' you-wrong'; } oh+=`<div class="${cls}">${o.text}<div class="why">${o.why}</div></div>`; }); const mk=state.marked.has(i)?`<span class="st marked">Marked</span>`:''; return `<div class="rq" id="rq${i}"><div class="rhead" onclick="this.parentNode.classList.toggle('open')"><span class="st ${ok?'correct':'incorrect'}">${ok?'Correct':'Incorrect'}</span>${mk}<span class="qno">Question ${i+1}</span><span class="pill" style="background:#ecebfb;color:#8710d8;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600">${q.domain}</span><span class="hint">▶ Explain this further</span></div><div class="rbody"><div class="scenario">${q.scenario}</div>${oh}<div class="exp"><b>解説:</b> ${q.explanation}</div></div></div>`; }).join(''); document.getElementById('results').innerHTML=` <div class="results-hero"><div class="score ${pass?'pass':'fail'}">${correct}/${TOTAL} · ${pct}%</div><div class="sub">${pass?'合格（72%以上）':'不合格（72%未満）'} · ${ Object.values(di).filter(x=>x).length } 正答 / ${TOTAL-correct} 不正答</div></div> <h3 style="margin:18px 0 8px">Domains</h3><table class="dtable"><tr><th>Domain</th><th class="num">題数</th><th class="num">正答</th><th class="num">正答率</th><th></th></tr>${rows}</table> <h3 style="margin:24px 0 8px">Question review (クリックで解説展開)</h3> <div class="filters"><button class="on" onclick="filterReview(this,'all')">All</button><button onclick="filterReview(this,'incorrect')">Incorrect</button><button onclick="filterReview(this,'marked')">Marked</button></div> ${cards}`; window.scrollTo(0,0); }
@@ -184,9 +184,10 @@ async function showIntro(){
   document.getElementById('histTitle').classList.add('hidden'); hEl.innerHTML='<div style="color:var(--sub);font-size:13px;padding:8px 0">履歴を読み込み中...</div>';
   let hist=[]; try{ hist = await (await fetch('/api/exam-history?exam=2')).json(); }catch(e){ hEl.innerHTML='<div style="color:var(--bad);font-size:13px;padding:8px 0">（履歴の読み込み失敗・raspi に接続できません）</div>'; return; }
   if(hist&&hist.length){
+    window.HIST=hist;
     document.getElementById('histTitle').classList.remove('hidden');
-    hEl.innerHTML='<table class="dtable"><tr><th>日時</th><th class="num">スコア</th><th class="num">正答率</th><th>合否</th><th class="num">回答</th><th class="num">所要</th></tr>'+hist.map(function(r){ return '<tr><td>'+r.date+'</td><td class="num">'+r.score+'/'+r.total+'</td><td class="num">'+r.pct+'%</td><td>'+(r.pass?'<span style="color:var(--ok)">合格</span>':'<span style="color:var(--bad)">不合格</span>')+'</td><td class="num">'+r.answered+'</td><td class="num">'+Math.floor(r.timeUsed/60)+'分</td></tr>'; }).join('')+'</table>';
-  } else { hEl.innerHTML=''; }
+    hEl.innerHTML='<table class="dtable"><tr><th>日時</th><th class="num">スコア</th><th class="num">正答率</th><th>合否</th><th class="num">所要</th><th>結果</th></tr>'+hist.map(function(r,i){ return '<tr><td>'+r.date+'</td><td class="num">'+r.score+'/'+r.total+'</td><td class="num">'+r.pct+'%</td><td>'+(r.pass?'<span style="color:var(--ok)">合格</span>':'<span style="color:var(--bad)">不合格</span>')+'</td><td class="num">'+Math.floor(r.timeUsed/60)+'分</td><td>'+(r.answers?'<button onclick="viewResult('+i+')" style="background:var(--card);border:1px solid var(--udemy);color:var(--udemy-d);padding:4px 12px;border-radius:5px;cursor:pointer;font-size:12px">開く</button>':'<span style="color:var(--sub);font-size:11px">なし</span>')+'</td></tr>'; }).join('')+'</table>';
+  } else { window.HIST=[]; hEl.innerHTML=''; }
 }
 function startExam(resume){
   if(!resume){ state={answers:{},marked:new Set(),cur:0,finished:false,timeLeft:TIME_LIMIT,started:true}; save(); }
@@ -212,6 +213,18 @@ function showReview(){
   document.getElementById('results').classList.remove('hidden');
   window.scrollTo(0,0);
 }
+function viewResult(i){
+  const rec=window.HIST[i]; if(!rec||!rec.answers){ alert('この履歴には回答データがありません'); return; }
+  state.answers=rec.answers; state.marked=new Set(rec.markedSet||[]); state.cur=0; state.finished=true;
+  document.getElementById('intro').classList.add('hidden');
+  document.getElementById('finishBtn').classList.add('hidden');
+  renderResults();
+  const r=document.getElementById('results');
+  const bar='<div style="margin-bottom:12px"><button onclick="backToIntro()" style="background:var(--card);border:1px solid var(--line);padding:8px 16px;border-radius:6px;cursor:pointer">← 開始画面に戻る</button> <span style="color:var(--sub);font-size:13px">受験履歴（'+rec.date+'）を表示中</span></div>';
+  r.innerHTML=bar+r.innerHTML;
+  window.scrollTo(0,0);
+}
+function backToIntro(){ load(); showIntro(); }
 showIntro();
 setInterval(tick, 1000);
 </script>
