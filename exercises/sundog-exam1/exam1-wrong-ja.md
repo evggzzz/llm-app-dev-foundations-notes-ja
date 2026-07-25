@@ -1,179 +1,262 @@
-# Sundog CCDV-F Exam1 — 間違えた問題の日本語訳
+# Sundog CCDV-F Exam1 — 間違えた問題 復習
 
-> 元データ: `tasks/sundog-exam1-analysis/extracted/all.txt`（Attempt 2・53問中 10 incorrect）
-> 試験結果: 43 correct / 10 incorrect / 0 skipped（81%）
-> 翻訳方針: 技術用語・コード・パラメータ名（effort, adaptive thinking, tool_choice, cache_control, budget_tokens, prefill, max_turns 等）は英語保持。正解は all.txt の "Correct answer" に厳密に従う。
+Score: 43/53 (81%) ・Attempt 2 ・2026-07-19 ・10 incorrect
 
----
-
-## Q5（D1: Applications and Integration）
-
-大学の登録プラットフォームチームが、Claude を使った transcript review workflow をパイロットテストから本番へ移行しようとしている。この workflow は、独自の Agent Skill と再利用可能な prompt template を使う。チームには、安定したリリース、再現可能なテスト、そして長期的に安全にシステムを維持する方法が必要である。このライフサイクル目標を最もよく支える2つのアクションはどれか。
-
-- A. 本番での Skill 使用を特定のバージョンに pin し、active development 中のみ latest を使う。 ← 正解
-- B. 本番リクエストを latest の Skill バージョンに向け、ロールバックは user report に頼る。
-- C. prompts と Skill files を versioned artifacts として保存し、promotion 前に変更をテストする。 ← 正解
-- D. インシデント中は live の prompt を直接編集し、release overhead を減らすために templates を省く。
-
-**解説**: Claude アプリケーションでは、prompts, Skills, tool definitions, agent configuration をすべて code と同じく管理されたシステム artifact として扱うべきである。これらは本番の挙動に直接影響するため、場当たりなその場編集ではなく、開発・検証・デプロイ・運用・保守のライフサイクルを通じて管理する。Agent Skills については、開発中は `latest`、本番では特定バージョンの pin が Anthropic の推奨パターン。prompts についても templates で固定内容と可変内容を分離し、version 管理と test を行う。`latest` に追従させたりインシデント時に直接編集すると、変更管理が弱まり「どの artifact がある結果を生んだか」を追跡できなくなる。
-
-**参照**: Prep M5 S2「再利用のためのパッケージ化」＋ M5 S7C「要件とライフサイクル」（versioning と promotion gate）
+ドメイン別誤答: D1 App/Integration 3, D2 Model Selection 2, D3 Agents 1, D5 Tools/MCPs 3, D6 Security 1
 
 ---
 
-## Q15（D2: Model Selection and Optimization）
+## Part 1: 英語で解き直し（原文・正解マークなし）
 
-あるストリーミングエンタメプラットフォームが、Claude Sonnet 4.5 の prototype をベースに Claude router を再構築している。1日数百万件の短い字幕フォーマットチェックと、地域別リリース向けの少数の nuanced な script adaptation review がある。既存の request builder は常に `thinking: {type: "enabled", budget_tokens: N}` を送る。model selection と移行の要件に最も合う2つの推奨はどれか。
+> 本番形式で解き直す。優れたエンジニアは英語問題文から直接判断できる必要がある。回答は Part 2 で確認。
 
-- A. すべての workload を Claude Opus 4.8 に標準化する。現行の production 向け最快モデルだから。
-- B. Claude Sonnet 5 のリクエストから manual thinking budget を外し、`effort` parameter で推論の深さを調整する。 ← 正解
-- C. 代表的な traffic で品質・レイテンシ・コストを測ったうえで、単純な字幕チェックは Claude Haiku 4.5 に routing する。 ← 正解
-- D. Claude Sonnet 5 でも `thinking: {type: "enabled", budget_tokens: N}` を維持し、Sonnet 4.5 の request shape を保つ。
+### Q5（D1: Applications and Integration）
 
-**解説**: model selection は capability, latency, cost, context, feature 互換性の tradeoff であり、「最も能力の高いモデルが常に正解」ではない。Claude Haiku 4.5 は near-frontier intelligence を持つ最快モデルで、高ボリュームの単純タスクに適する。ただし eval での品質検証は必須。移行問題は capability とは別で、Claude Sonnet 5 は manual extended thinking（`budget_tokens`）をサポートせず、 adaptive thinking が default で、`effort` で品質・レイテンシ・token の tradeoff を調整する。古い `budget_tokens` を維持すると 400 error になるため、request builder の更新が必要。
+A university registrar's platform team is moving a Claude-powered transcript review workflow from pilot testing into production. The workflow uses a custom Agent Skill and a reusable prompt template. The team needs stable releases, repeatable testing, and a safe way to maintain the system over time. Which two actions best support this life cycle goal?
 
-**参照**: Prep M1 S3「Models & Reasoning」（adaptive thinking + effort）＋ M4 S10A「Model Selection」
+- [ ] A. Pin production Skill usage to specific versions, and use latest only during active development.
+- [ ] B. Point production requests at latest Skill versions, and rely on user reports for rollback.
+- [ ] C. Store prompts and Skill files as versioned artifacts, and test changes before promotion.
+- [ ] D. Edit live prompts during incidents, and skip templates to reduce release overhead.
 
----
+### Q15（D2: Model Selection and Optimization）
 
-## Q20（D3: Agents and Workflows）
+A streaming entertainment platform is rebuilding its Claude router after a prototype on Claude Sonnet 4.5. The platform has millions of short subtitle format checks each day, plus a smaller set of nuanced script adaptation reviews for regional releases. The existing request builder always sends `thinking: {type: "enabled", budget_tokens: N}`. Which two recommendations best fit the model-selection and migration requirements?
 
-再エネ grid 事業者の reliability チームが、Claude Agent SDK でインタラクティブな保守アシスタントを構築している。troubleshooting セッション中、エンジニアが Claude が既に調べたファイルに依存する follow-up 質問を投げ、UI は長い command 駆動の run を止めて新リクエストを出せる必要がある。この interaction model に最も合うのはどれか。
+- [ ] A. Standardize every workload on Claude Opus 4.8 because it is the fastest current model for production traffic.
+- [ ] B. Remove manual thinking budgets from Claude Sonnet 5 requests and tune reasoning depth with the `effort` parameter.
+- [ ] C. Route the straightforward subtitle checks to Claude Haiku 4.5 after measuring quality, latency, and cost on representative traffic.
+- [ ] D. Keep `thinking: {type: "enabled", budget_tokens: N}` on Claude Sonnet 5 to preserve the Sonnet 4.5 request shape.
 
-- A. エンジニアのメッセージごとに新しい subagent を spawn し、follow-up ごとに isolated context で動かす。
-- B. follow-up ごとに別々に `query()` を呼び、毎回独立した session で始める。
-- C. メッセージごとに bare mode で `claude -p` を走らせ、local 設定をスキップする。
-- D. `ClaudeSDKClient` を使い、session をターン間で持続させ、UI が interruption flow を扱う。 ← 正解
+### Q20（D3: Agents and Workflows）
 
-**解説**: Agent SDK では `query()` は one-off task 向きで、デフォルトで毎回新しい session を生成する。一方 `ClaudeSDKClient` は、client が継続的接続と会話 lifecycle を管理する multi-turn session 向けに設計されている。インタラクティブな troubleshooting では、Claude が過去に調べたファイル・解釈したログ・立てた仮説を follow-up 質問が依存するため、context の持続が必須。さらに `ClaudeSDKClient` は進行中タスクの interrupt をサポートし、interrupted な response stream を drain してから次の query を送るフローが、エンジニアが長い run を止めて向きを変える UI に合う。subagent は context 隔離に使うもので、状態を持続させる会話の主機構ではない。
+A renewable energy grid operator's reliability tooling team is building an interactive maintenance assistant with the Claude Agent SDK. During a troubleshooting session, an engineer asks follow-up questions that depend on files Claude already inspected, and the UI must let the engineer stop a long command-driven run before issuing a new request. Which approach best fits the interaction model?
 
-**参照**: —（Prep では `ClaudeSDKClient` vs `query()` の直接比較は未扱い。Agent SDK の loop 自体は Prep M2 S16「Agent Construction」を参照）
+- [ ] A. Spawn a new subagent for each engineer message so every follow-up runs in isolated context.
+- [ ] B. Call query() separately for each follow-up so every request starts with an independent session.
+- [ ] C. Run claude -p with bare mode for each message so local configuration is skipped.
+- [ ] D. Use ClaudeSDKClient so the session persists across turns and the UI can handle interruption flow.
 
----
+### Q22（D5: Tools and MCPs）
 
-## Q22（D5: Tools and MCPs）
+A maritime logistics provider's backend team is adding Claude to a customer support console. Agents ask questions such as "Where is container MSKU1234567 and what exceptions are active?" The data is in a private tracking service reachable only from the provider's application backend, and the team wants one Messages API integration rather than a reusable MCP server. Which approach best fits?
 
-海運物流プロバイダーのバックエンドチームが、カスタマーサポートコンソールに Claude を追加する。エージェントは「container MSKU1234567 はどこにあって、どんな例外が active か?」といった質問をする。データはプロバイダーのアプリケーションバックエンドからしか届かない private tracking service にあり、再利用可能な MCP server ではなく1つの Messages API 統合が欲しい。最適な手法はどれか。
+- [ ] A. Use the web fetch server tool to retrieve tracking responses, then parse the container status from the page.
+- [ ] B. Use the MCP connector against the tracking service URL, then rely on Claude to discover its REST endpoints.
+- [ ] C. Package the tracking workflow as an Agent Skill, then have Claude call the private service from the Skill.
+- [ ] D. Define a custom client tool with a structured input schema, then execute the tracking lookup in the application.
 
-- A. web fetch server tool で tracking response を取得し、ページから container status を parse する。
-- B. tracking service の URL に対して MCP connector を使い、Claude が REST endpoint を発見するのに任せる。
-- C. tracking workflow を Agent Skill として package し、Skill から private service を呼ばせる。
-- D. custom client tool を構造化 input schema で定義し、tracking lookup をアプリケーション内で実行する。 ← 正解
+### Q23（D5: Tools and MCPs）
 
-**解説**: private backend lookup には custom client tool が最適。Claude は `tool_use` request を出し（container 識別子などの検証済み引数付き）、アプリケーションが private service 呼び出しを実行して `tool_result` を返す。これで credential, network access, validation, error handling をすべてプロバイダーのバックエンド内に保てる。MCP connector は Messages API から遠隔 MCP server に繋ぐもので、任意の REST service を発見する汎用の仕組みではない。Agent Skill は code execution sandbox 内で動き、backend-only の service lookup には不適。web fetch は Anthropic 側の infra から URL コンテンツを取得する server tool で、private backend bridge ではない。
+A legal publishing team's platform group is building a Claude API integration to help editors draft case summaries. Editors need Claude to apply an in-house style guide, reuse document templates, and run packaged validation scripts when the task calls for them. The workflow does not require live access to an internal service or the external network. Which approach best fits?
 
-**参照**: Prep M2 S7「Tool-use and Schema Design」（client tool vs MCP vs server tool）＋ M3 S12「MCP Servers」
+- [ ] A. Package the guide, templates, and scripts as an Agent Skill and enable it with code execution.
+- [ ] B. Define each editorial rule as a custom client tool and return tool results from the application.
+- [ ] C. Fetch the style guide and templates with a server tool during every drafting request.
+- [ ] D. Connect the materials as a local STDIO MCP server through the Messages API MCP connector.
 
----
+### Q33（D1: Applications and Integration）
 
-## Q23（D5: Tools and MCPs）
+A restaurant reservation platform's analytics team uses the Messages API to label diner feedback with a short internal code. Their downstream parser expects each output to start with a fixed marker followed by only a few generated code characters, with no explanatory text. Which approach best fits this integration pattern?
 
-法律出版チームが、編集者向けの case summary 作成を支援する Claude API 統合を構築する。編集者は、社内 style guide の適用、document template の再利用、必要なときの packaged validation script 実行を求める。workflow に内部サービスや外部 network への live access は不要である。最適な手法はどれか。
+- [ ] A. Put the fixed prefix in the top-level system field, and ask Claude to repeat it before the code.
+- [ ] B. Add the fixed prefix as an earlier user message, and parse the first matching code in the reply.
+- [ ] C. End messages with a partial assistant turn containing the fixed prefix, and set a small max_tokens for the code.
+- [ ] D. Send only the latest feedback text, and rely on the API to preserve the previous classifier state.
 
-- A. guide, templates, scripts を Agent Skill として package し、code execution と一緒に有効にする。 ← 正解
-- B. 各編集ルールを custom client tool として定義し、アプリケーションから tool result を返す。
-- C. すべての drafting request で server tool 経由で style guide と templates を fetch する。
-- D. materials を local STDIO MCP server として Messages API の MCP connector に繋ぐ。
+### Q34（D2: Model Selection and Optimization）
 
-**解説**: どの仕組みを選ぶかは「Claude が callable action, external tool access, それとも再利用可能な task knowledge を必要としているか」で決まる。Agent Skill は instructions, metadata, scripts や templates などの resources を package でき、progressive disclosure で関連時に読み込まれる。stable な editorial workflow で live service call なしに再利用可能な guidance と bundled artifacts を提供するには Skill が自然。Claude API では Skill は code execution と併用し、sandbox 内で materials にアクセス・実行する。client tool は構造化関数の呼び出し向け、MCP connector は遠隔 HTTP server 向けで、いずれも local file の汎用 package 机制ではない（connector は STDIO を直接繋げない）。
+A maritime logistics startup runs a Claude-powered route-planning assistant. Each request includes a large, stable port operations manual, then a changing vessel profile, weather snapshot, and user question. The team also uses adaptive thinking for hard planning requests and notices that invoices show more output tokens than the visible text in the response. Which two actions should the team take to improve cost visibility and reduce repeated input cost?
 
-**参照**: Prep M3 S8「Packaging Workflows」（Skill + code execution）＋ M2 S7 末尾
+- [ ] A. Track usage with cache token fields and output thinking token details rather than visible text alone.
+- [ ] B. Move cache_control to the final user block so each full request is checkpointed for reuse.
+- [ ] C. Set thinking display to omitted and treat visible response tokens as the billed output tokens.
+- [ ] D. Place cache_control on the last manual block that stays identical before the changing request content.
 
----
+### Q41（D5: Tools and MCPs）
 
-## Q33（D1: Applications and Integration）
+A museum archive's digital preservation team is authoring an MCP server for Claude applications. The server must let applications access archival records, provide reusable curator review templates, perform approved metadata updates, and support remote HTTP clients. Which TWO implementation choices best align with MCP server development practices?
 
-レストラン予約プラットフォームの analytics チームが Messages API を使い、diner feedback に短い社内コードを付ける。downstream parser は、各出力が固定 marker で始まり、続いて数文字の生成コードだけが続き、説明文はないことを期待する。この統合パターンに最も合うのはどれか。
+- [ ] A. Model metadata update operations as tools exposed through tools/list and invoked through tools/call.
+- [ ] B. Keep the older HTTP plus SSE split because it is the current transport for remote MCP servers.
+- [ ] C. Expose records and review templates as tools so the model controls every retrieval and template selection.
+- [ ] D. Use a Streamable HTTP endpoint with POST for client messages, GET for streaming, and web security controls.
 
-- A. 固定 prefix を top-level system field に置き、Claude に code の前にそれを繰り返させる。
-- B. 固定 prefix を earlier user message として追加し、返信の最初の一致する code を parse する。
-- C. 最後を partial assistant turn（固定 prefix を含む）で終わらせ、code 向けに小さな `max_tokens` を設定する。 ← 正解
-- D. 最新の feedback text だけを送り、API が前の classifier state を保持していることに頼る。
+### Q44（D1: Applications and Integration）
 
-**解説**: Messages API は各リクエストを自己完結した prompt として扱う。対応する model では、最後の入力メッセージを partial assistant message にして Claude にそこから続かせる prefill パターンをサポートする。parser が単一の分類コードのようなコンパクトな続きを期待する場合、これが有用で、小さな `max_tokens` と組み合わせて生成を絞れる。ただし assistant prefill は現行 Claude model で普遍的にサポートされるわけではなく、未サポート model では失敗する点に注意。system prompt や example は振る舞いの guidance であって continuation point ではない。また API は stateless なので、前の classifier state や prefix を暗黙に保持することはない。
+An aerospace robotics lab has a shared Claude Code project configuration that sets the default model for day-to-day development. One engineer needs to run a single experiment with a different model, without committing a configuration change or affecting teammates. Which approach best fits?
 
-**参照**: Prep M2 S2「Prompting Craft」（構造化出力と prefill の非互換性）
+- [ ] A. Change the user model setting mid-session and rely on settings hot reload.
+- [ ] B. Set the shared project model in .claude/settings.json for the experiment.
+- [ ] C. Place a temporary model instruction in CLAUDE.md for the experiment.
+- [ ] D. Start the experiment with a CLI model override for that invocation only.
 
----
+### Q50（D6: Security and Safety）
 
-## Q34（D2: Model Selection and Optimization）
+A regional housing authority's digital services team is launching a Claude assistant that drafts eligibility notes for housing benefits caseworkers and may show recommendation summaries directly to applicants. Users can type free-form messages, and the team expects some attempts to bypass the application's rules. Which TWO deployment actions best align with Anthropic's safety guidance?
 
-海運物流 startup が Claude 駆動の経路計画アシスタントを運営する。各リクエストには、大きく安定した port operations manual、続いて変わる vessel profile, weather snapshot, user question が含まれる。adaptive thinking を hard な計画要求に使っており、response の可視テキストより請求の output token が多いことに気づいている。cost visibility を改善し、反復入力コストを下げる2つのアクションはどれか。
-
-- A. cache token fields と output thinking token details を可視テキストだけでなく追跡する。 ← 正解
-- B. `cache_control` を最後の user block に移し、各 full request を再利用のため checkpoint する。
-- C. thinking display を omitted に設定し、可視 response token を課金 output token として扱う。
-- D. `cache_control` を、変わる request content の直前の、最後の identically な manual block に置く。 ← 正解
-
-**解説**: cost 管理では「何が入力として再利用されるか」と「何が出力として課金されるか」を分けて扱う。prompt caching は stable prefix の最後の block に checkpoint を置くことで最も効く。operations manual は安定し、vessel/weather/user は可変なので、境界は可変コンテンツの直前に置く。usage 把握では API の usage fields を読む。caching 活性時は `cache_read_input_tokens`, `cache_creation_input_tokens`, `input_tokens` に分かれる。adaptive/extended thinking 使用時は、可視 thinking が省かれても内部 thinking token は課金 output に算入され、`usage.output_tokens_details.thinking_tokens` で見える。thinking display を omitted にするのはレイテンシ最適化であって、thinking の課金をなくすわけではない。
-
-**参照**: Prep M4 S11「Cost & Orchestration」（prompt caching と token 計装）＋ M2 S5「Extended Thinking」
-
----
-
-## Q41（D5: Tools and MCPs）
-
-博物館アーカイブのデジタル保存チームが Claude アプリ向けの MCP server を構築する。server はアプリに archival records へのアクセスを提供し、再利用可能な curator review templates を提供し、承認された metadata 更新を実行し、遠隔 HTTP client をサポートする必要がある。MCP server 開発のベストプラクティスに合致する2つの実装選択はどれか。
-
-- A. metadata update 操作を tools として model 化し、`tools/list` で公開し、`tools/call` で呼び出す。 ← 正解
-- B. 古い HTTP+SSE split を維持する。遠隔 MCP server 向けの現行 transport だから。
-- C. records と review templates を tools として公開し、model がすべての取得と template 選択を制御する。
-- D. Streamable HTTP endpoint を使い、client message は POST, streaming は GET, さらに web security controls を実装する。 ← 正解
-
-**解説**: MCP server 設計は各機能に正しい primitive を選ぶことから始まる。tools は model-controlled の実行可能関数で、承認された metadata 更新は tool model に合う。`tools/list` で公開し `tools/call` で起動する。一方 archival records は application-controlled な resources, review templates は user-controlled な prompts が適切で、MCP は実行可能 action と resources と prompts を明確に区別する。すべてを tools にすると制御モデルが崩れる。遠隔 HTTP client 向けの現行 transport は Streamable HTTP で、単一 endpoint に POST で client JSON-RPC、GET で任意の SSE stream を送る。古い HTTP+SSE は protocol version 2024-11-05 で置き換えられた。Origin の validation, loopback への安全な bind, 適切な認証も必要。
-
-**参照**: Prep M3 S12「MCP Servers」（tools/resources/prompts と transport）
+- [ ] A. Rely on a stronger system prompt as the sole jailbreak mitigation.
+- [ ] B. Apply the content moderation guide as the primary control for Claude interactions.
+- [ ] C. Pre-screen user inputs with a lightweight Claude model using structured classification.
+- [ ] D. Require qualified human review before eligibility recommendations are finalized or disseminated.
 
 ---
 
-## Q44（D1: Applications and Integration）
+## Part 2: 日本語で復習（和訳＋解説＋正解）
 
-航空宇宙ロボティクス研究所が、日常開発向けの default model を設定した共有 Claude Code project configuration を持つ。あるエンジニアが、configuration 変更を commit せず、チームメイトに影響を与えずに、別 model で単一の実験を走らせたい。最適な手法はどれか。
+### Q5（D1: Applications and Integration）— 複数回答（A・C）
 
-- A. session 中に user model setting を変更し、settings の hot reload に頼る。
-- B. 実験用に shared project model を `.claude/settings.json` に設定する。
-- C. 実験用の temporary model instruction を `CLAUDE.md` に置く。
-- D. その invocation のみ、CLI の model override で実験を始める。 ← 正解
+**問題文（和訳）**: 大学登録課のプラットフォームチームが、Claude を使った成績証明書レビューワークフローをパイロットから本番に移行している。このワークフローはカスタム Agent Skill と再利用可能なプロンプトテンプレートを使う。チームは安定したリリース・反復可能なテスト・長期的な安全な保守を必要としている。このライフサイクル目標を最もよく支えるアクション 2 つはどれか。
 
-**解説**: one-off な Claude Code 実行には、共有設定の編集ではなく invocation-level の model override を使う。Claude Code の settings は階層的（managed, command-line, local project, shared project, user）で、CLI からの model override は1つの session を default から切り替める狭いユースケース向け。チームメイトの default はそのまま。`CLAUDE.md` は memory/context を読み込む層で、runtime 設定を強制する仕組みではない。shared project settings はチーム全体の persistent default 向けで、個人の実験には不適。また model setting は session 開始時に1回読まれ、`/model` など対話的仕組みを通さない限り hot reload の対象外。再現性のため pinned model ID を使うか alias かも意識する。
+- A. 本番での Skill 利用を特定バージョンに pin し、active development 中のみ latest を使う ← 正解
+- B. 本番リクエストを latest Skill バージョンに向け、ロールバックはユーザ報告に頼る
+- C. プロンプトと Skill ファイルを versioned artifacts として保存し、昇格前に変更をテストする ← 正解
+- D. インシデント中にライブのプロンプトを直接編集し、テンプレートを省いてリリースオーバーヘッドを減らす
 
-**参照**: Prep M3 S2「Permission Modes & Human Gates」（settings 階層と model setting の hot-reload 挙動）
+**解説**: プロンプト・Skill・ツール定義・agent 設定は本番の挙動を決定する「管理対象アーティファクト」。コードと同じく開発→検証→デプロイ→運用→保守のライフサイクルを通すべき。Skill は本番ではバージョン pin、開発では latest が推奨パターン。プロンプトはテンプレートで固定部と可変部を分離し、バージョン管理とテストでトレーサビリティを確保。B（latest 追跡・ユーザ報告依存）は reactive で再現性がない。D（ライブ編集・テンプレート省略）は change control を弱める。
 
----
-
-## Q50（D7: Security and Safety）
-
-地域住宅管理機関の digital services チームが、住宅給付の case worker 向けに適格性 note を作成し、推奨 summary を申請者に直接見せる可能性のある Claude アシスタントを立ち上げる。user は自由形式メッセージを打て、アプリのルールを迂回しようとする試みも想定される。Anthropic の safety guidance に最も合致する2つのデプロイアクションはどれか。
-
-- A. 強化した system prompt だけを唯一の jailbreak 対策として頼る。
-- B. content moderation guide を Claude とのやり取りに対する主制御として適用する。
-- C. 軽量 Claude model と structured classification で user input を事前 screening する。 ← 正解
-- D. 適格性推奨が確定・配信される前に、適格な人間の review を必須にする。 ← 正解
-
-**解説**: Claude アプリの安全なデプロイは、workflow が high-risk use case に当たるかの特定から始まる。Anthropic の Usage Policy は、住宅、金融、医療、法務、雇用の意思決定など、出力が直接個人に影響する領域を追加保護対象とする。住宅給付 workflow では、確定前の人間の review が重要な制御。guardrail は単一 system prompt ではなく重ねる。Anthropic の jailbreak 対策 guidance は、軽量 model（Claude Haiku 4.5 など）による input 事前 screening, structured output による単純分類, 既知の injection pattern の filter, prompt の hardening, 反復滥用者の throttle や ban を推奨。なお Claude とのやり取りを保護するのは guardrails guidance であって、content moderation guide はアプリ内 user 生成コンテンツのモデレーション向け。
-
-**参照**: Prep M4 S14「Security — Teaching」（layered defense と high-risk use case）
+**参照**: Prep M3 S08「Packaging Workflows」（Agent Skills の API/Claude Code での使い分け・versioning）
 
 ---
 
-## サマリ
+### Q15（D2: Model Selection and Optimization）— 複数回答（B・C）
 
-| 問題 | ドメイン | トピック | Prep 参照 |
-|------|----------|----------|-----------|
-| Q5 | D1 Applications & Integration | Skill/prompt の versioning と lifecycle | M5 S2 + M5 S7C |
-| Q15 | D2 Model Selection & Optimization | Sonnet 5 の adaptive thinking, Haiku 4.5 routing | M1 S3 + M4 S10A |
-| Q20 | D3 Agents & Workflows | `ClaudeSDKClient` vs `query()` | —（Prep では直接未扱い。M2 S16 参照） |
-| Q22 | D5 Tools & MCPs | private backend 向け custom client tool | M2 S7 + M3 S12 |
-| Q23 | D5 Tools & MCPs | Agent Skill + code execution | M3 S8 + M2 S7 |
-| Q33 | D1 Applications & Integration | prefill（partial assistant turn） | M2 S2 |
-| Q34 | D2 Model Selection & Optimization | cache_control 配置と thinking token 課金 | M4 S11 + M2 S5 |
-| Q41 | D5 Tools & MCPs | MCP primitives（tools/resources/prompts）と Streamable HTTP | M3 S12 |
-| Q44 | D1 Applications & Integration | Claude Code の CLI model override | M3 S2 |
-| Q50 | D7 Security & Safety | jailbreak 多層防御と high-risk use case | M4 S14 |
+**問題文（和訳）**: ストリーミングエンタメプラットフォームが Claude Sonnet 4.5 のプロトタイプ後、Claude ルータを再構築している。1 日に数百万件の短い字幕フォーマットチェックと、少数の地域別脚本適応レビューがある。既存のリクエストビルダは常に `thinking: {type: "enabled", budget_tokens: N}` を送る。model-selection と移行要件に最適な推奨 2 つはどれか。
 
-### 弱点傾向
+- A. すべてのワークロードを Claude Opus 4.8 に統一する（最速の本番向けモデルだから）
+- B. Claude Sonnet 5 リクエストから manual thinking budget を削除し、`effort` パラメータで推論深度を調整する ← 正解
+- C. 代表トラフィックで品質・レイテンシ・コストを計測したうえで、単純な字幕チェックは Claude Haiku 4.5 にルーティングする ← 正解
+- D. Sonnet 4.5 のリクエスト形状を保つため Sonnet 5 でも `thinking: {type: "enabled", budget_tokens: N}` を維持する
 
-- **D5 Tools & MCPs（3問: Q22, Q23, Q41）** が最多。client tool, MCP connector, Agent Skill, server tool の使い分けと、MCP primitives の制御モデルの区別が曖昧。
-- **D2 Model Selection & Optimization（2問: Q15, Q34）** が次点。Sonnet 5 の adaptive thinking 移行と、prompt caching の checkpoint 配置・thinking token 課金の理解。
-- **D1 Applications & Integration（3問: Q5, Q33, Q44）** は lifecycle/versioning, prefill, Claude Code model override と幅広い。
-- **共通パターン**: 「MCP connector は remote HTTP server 専用で STDIO/REST 発見には使えない」「prompt 指示は guidance であって enforcement ではない」「最新 model の thinking 挙動（adaptive + effort）と旧 budget_tokens の非互換性」が繰り返し現れる。
+**解説**: Haiku 4.5 は「最速・near-frontier intelligence」で高ボリューム単純タスク向け。Opus 4.8 は agentic coding/enterprise 向きで最速ではない。Sonnet 5 は **adaptive thinking がデフォルト**で manual `budget_tokens` を **400 拒否**する。そのため D は移行アンチパターン。正しい移行は B のとおり `effort` で推論深度を制御する。C の Haiku 4.5 ルーティングは計測ペア付きが推奨（eval で品質ゲートを守るため）。A は Opus 4.8 を誤って位置づけている。
+
+**参照**: Prep M1 S03「Models & Reasoning」（model family の位置づけ）＋ Prep M2 S05「Extended Thinking」（adaptive thinking・`effort`・`budget_tokens` 非推奨化）
+
+---
+
+### Q20（D3: Agents and Workflows）— 単一回答（D）
+
+**問題文（和訳）**: 再生可能エネルギー網オペレータの信頼性ツールチームが Claude Agent SDK でインタラクティブな保守アシスタントを構築している。トラブルシューティング中、エンジニアが Claude が既に調査したファイルに依存するフォローアップ質問をし、UI は新しいリクエスト前に長いコマンド駆動の実行を止められる必要がある。最適なインタラクションモデルはどれか。
+
+- A. エンジニアの各メッセージで新しい subagent を spawn し、すべてのフォローアップを隔離されたコンテキストで実行する
+- B. 各フォローアップごとに query() を別々に呼び、毎回独立したセッションで始める
+- C. 各メッセージを `claude -p` の bare mode で実行し、ローカル設定をスキップする
+- D. ClaudeSDKClient を使い、セッションがターン間で保持され UI が interruption flow を処理できるようにする ← 正解
+
+**解説**: Agent SDK の核心は「一_off タスクか継続会話か」。`query()` は独立した one-off・自動化向けでデフォルトで新規セッション生成。`ClaudeSDKClient` はマルチターン・状態保持・中断(in-flight task の stop → drain → next query)をサポート。インタラクティブなトラブルシューティング（過去のファイル調査・仮説に依存するフォローアップ）には `ClaudeSDKClient` が必須。A の subagent はコンテキスト隔離に使うもので共有状態の維持には不適。C の bare `-p` は CI/スクリプト向け。
+
+**参照**: Prep M2 S16「Agent Construction」（wiring path: Messages API / Agent SDK / Managed Agents の選択・loop の実装）
+
+---
+
+### Q22（D5: Tools and MCPs）— 単一回答（D）
+
+**問題文（和訳）**: 海事物流プロバイダのバックエンドチームが顧客サポートコンソールに Claude を追加する。エージェントは「コンテナ MSKU1234567 はどこにあり、例外は何がアクティブか？」と聞く。データはプロバイダのアプリケーションバックエンドからのみ届く private tracking service にあり、再利用可能な MCP サーバではなく 1 つの Messages API 統合がしたい。最適なアプローチはどれか。
+
+- A. web fetch server tool で追跡レスポンスを取得し、ページからコンテナステータスをパースする
+- B. tracking service URL に対して MCP connector を使い、Claude に REST エンドポイントを発見させる
+- C. 追跡ワークフローを Agent Skill としてパッケージし、Skill から private service を呼ばせる
+- D. 構造化 input schema を持つ custom client tool を定義し、tracking lookup をアプリケーション側で実行する ← 正解
+
+**解説**: private backend lookup には custom client tool が最適。Claude は `tool_use` を出し、アプリケーションが private service を実行して `tool_result` を返す。認証・ネットワーク・バリデーション・エラーハンドリングはすべてバックエンドに留まる。A の web fetch は Anthropic 側 URL 取得用で private service への橋ではない。B の MCP connector は remote MCP server 向きで arbitrary REST 発見機構ではない。C の Skill はバックエンド API を構造化アクションとして公開する抽象ではない（code execution sandbox で動く）。
+
+**参照**: Prep M2 S07「Tool-use and Schema Design」（tool-use loop・client 実行モデル・schema 設計）
+
+---
+
+### Q23（D5: Tools and MCPs）— 単一回答（A）
+
+**問題文（和訳）**: 法律出版チームが編集者向けのケースサマリー作成 Claude API 統合を構築している。編集者は社内スタイルガイドの適用・ドキュメントテンプレートの再利用・タスクごとのパッケージ化検証スクリプト実行を必要とする。ワークフローは内部サービスや外部ネットワークへのライブアクセスを必要としない。最適なアプローチはどれか。
+
+- A. ガイド・テンプレート・スクリプトを Agent Skill としてパッケージし、code execution で有効化する ← 正解
+- B. 各編集ルールを custom client tool として定義し、アプリケーションから tool result を返す
+- C. サーバツールで毎回ドラフト要求時にスタイルガイドとテンプレートを fetch する
+- D. Materials を local STDIO MCP server として Messages API MCP connector 経由で接続する
+
+**解説**: 要件は「再利用可能なタスク知識 + バンドルされたリソース・スクリプト」であってライブ API コールではない。Agent Skill は instructions・metadata・scripts・templates をパッケージ化し、progressive disclosure で関連時にロード。Claude API では code execution と組み合わせて使い、sandbox 内でバンドル素材にアクセス・実行。B（各編集ルールを client tool 化）は不要な tool orchestration を増やす。C（毎回 fetch）は安定素材の再パッケージを怠る。D は MCP connector が remote HTTP 向けで local STDIO を Messages API に直結できない点を誤解。
+
+**参照**: Prep M3 S08「Packaging Workflows」（Skills の API/Claude Code 統合・code execution sandbox の制約）
+
+---
+
+### Q33（D1: Applications and Integration）— 単一回答（C）
+
+**問題文（和訳）**: レストラン予約プラットフォームの解析チームが Messages API で diner feedback に短い社内コードを付ける。下流パーサは各出力が固定マーカーで始まり、あとは数文字の生成コードのみ（説明文なし）を期待する。この統合パターンに最適なのはどれか。
+
+- A. 固定 prefix を top-level system field に置き、コード前に Claude にそれを繰り返させる
+- B. 固定 prefix を以前の user message として追加し、返信内の最初の一致コードをパースする
+- C. メッセージを partial assistant turn（固定 prefix を含む）で終え、コード用に小さな max_tokens を設定する ← 正解
+- D. 最新の feedback テキストのみを送り、API が以前の分類器状態を保持することに頼る
+
+**解説**: Messages API は各リクエストを自己完結プロンプトとして扱う。サポートするモデルでは partial assistant message で Claude の「続き」を開始できる（**prefill** パターン）。短い分類コードのようなコンパクトな続きには `max_tokens` を小さく設定すると効果的。A・B は system/user 経由の誘導で、続きの開始点を直接形作れない。D は Messages API がステートレス（サーバ側会話状態を自動保存しない）点を誤解。ただし **prefill はモデル互換性があり**、未サポート機種では 400 になる点に注意（現行モデルの一部のみ支持）。
+
+**参照**: Prep M2 S02「Prompting Craft」（system prompt・prefill・output constraint の使い分け）
+
+---
+
+### Q34（D2: Model Selection and Optimization）— 複数回答（A・D）
+
+**問題文（和訳）**: 海事物流スタートアップが Claude 駆動のルート計画アシスタントを運用する。各リクエストには大型で安定した港運用マニュアル、続いて変化する船舶プロファイル・天気スナップショット・ユーザ質問が含まれる。adaptive thinking を使い、請求書の output token が可視テキストより多いことに気づいている。コスト可視性を改善し反復入力コストを下げるアクション 2 つはどれか。
+
+- A. cache token fields と output thinking token details で usage を追跡する（可視テキストだけでなく） ← 正解
+- B. cache_control を最終 user block に移し、各完全リクエストを再利用可能に checkpoint する
+- C. thinking display を omitted に設定し、可視応答トークンを課金出力トークンとみなす
+- D. cache_control を、変化する要求コンテンツの直前の最後の manual block（同一のもの）に置く ← 正解
+
+**解説**: コスト管理は 2 つの関心を分ける。①再利用される入力: prompt caching は同一 prefix で効果を発揮。checkpoint は安定 prefix（港マニュアル）の最後の block に置き、変動コンテンツ（船舶・天気・質問）は checkpoint 後に置く（D）。②課金される出力: usage フィールドを読む。caching 活性時は入力合計が `cache_read_input_tokens`・`cache_creation_input_tokens`・`input_tokens` に分散。thinking 使用時、可視 thinking は省略されても内部 thinking token は課金出力に計上され、`usage.output_tokens_details.thinking_tokens` で可視化される（A）。B は最終 user block が毎回変化するため fresh cache write になる（アンチパターン）。C は omitted が課金免除ではなくレイテンシ最適化に過ぎない点を誤解。
+
+**参照**: Prep M2 S05「Extended Thinking」（thinking token 課金・display 設定）＋ Prep M2 S13「Context Engineering」（cache_control 配置・cache token フィールド）
+
+---
+
+### Q41（D5: Tools and MCPs）— 複数回答（A・D）
+
+**問題文（和訳）**: 博物館アーカイブのデジタル保存チームが Claude アプリ向け MCP server を作っている。サーバはアプリにアーカイブレコードへのアクセス・再利用可能な学芸員レビューテンプレート・承認されたメタデータ更新・remote HTTP クライアントサポートを提供する必要がある。MCP server 開発プラクティスに最も合致する実装選択 2 つはどれか。
+
+- A. メタデータ更新操作を tools としてモデル化し、tools/list で公開し tools/call で起動する ← 正解
+- B. 古い HTTP+SSE 分割を維持する（remote MCP server 向け現行トランスポートだから）
+- C. レコードとレビューテンプレートを tools として公開し、モデルにすべての取得とテンプレート選択を制御させる
+- D. Streamable HTTP endpoint を使い、client メッセージに POST・streaming に GET・web security controls を設定する ← 正解
+
+**解説**: MCP の primitive は制御モデルが異なる。Tools = model-controlled 実行可能関数（`tools/list`・`tools/call`）、resources = application-controlled 読み取りデータ、prompts = user-controlled 指示テンプレート。承認されたメタデータ更新は tools に（A）。アーカイブレコードは resources・テンプレートは prompts が適切で、すべて tools 化する C は誤り。remote HTTP 向け現行トランスポートは **Streamable HTTP**（protocol version 2024-11-05 以降）。古い HTTP+SSE は deprecated で B は誤り。D は単一 endpoint・POST(クライアント JSON-RPC)・GET(SSE)・Origin 検証・bind 管理・認証を含む正しい実装。
+
+**参照**: Prep M3 S12「MCP Servers」（tools/resources/prompts の使い分け・stdio/HTTP/SSE transport・Streamable HTTP）
+
+---
+
+### Q44（D1: Applications and Integration）— 単一回答（D）
+
+**問題文（和訳）**: 航空宇宙ロボティクスラボが day-to-day 開発のデフォルトモデルを設定した共有 Claude Code プロジェクト設定を持つ。1 人のエンジニアが設定変更を commit せず・チームメイトに影響を与えずに、異なるモデルで 1 回限りの実験を実行したい。最適なアプローチはどれか。
+
+- A. セッション途中で user model setting を変更し、settings hot reload に頼る
+- B. 実験用に .claude/settings.json の共有 project model を設定する
+- C. CLAUDE.md に一時的な model 指示を置く
+- D. その invocation のみ CLI model override で実験を開始する ← 正解
+
+**解説**: Claude Code の settings は階層的（managed > command-line > local project > shared project > user）。コマンドライン model override は単一セッションだけデフォルトから外れる仕組みで、共有設定を変えずチームメイトへの影響もない（D）。A は model 設定が session start で 1 回読まれる点（hot reload しない）と user settings 編集が永続化する点を誤解。B は共有 project settings を変えるためチームに影響。C は CLAUDE.md が memory/context であって runtime config の仕組みではない点を誤解（`/model` インタラクティブ命令は別）。
+
+**参照**: Prep M3 S02「Permission Modes & Human Gates」（settings 階層・user/project/enterprise・hot reload の境界）
+
+---
+
+### Q50（D6: Security and Safety）— 複数回答（C・D）
+
+**問題文（和訳）**: 地域住宅局のデジタルサービスチームが、住宅給付のケースワーカー向け適格性ノートを起草し、推奨サマリーを申請者に直接見せる可能性のある Claude アシスタントを立ち上げる。ユーザは自由形式メッセージを入力でき、アプリルール回避の試みが一部あると予想される。Anthropic の安全ガイダンスに最も合致するデプロイアクション 2 つはどれか。
+
+- A. より強力な system prompt のみを jailbreak 対策として頼る
+- B. Claude やり取りの主要制御として content moderation guide を適用する
+- C. lightweight Claude モデルで構造化分類を使いユーザ入力を pre-screen する ← 正解
+- D. 適格性推奨が確定・公開される前に qualified human review を要求する ← 正解
+
+**解説**: 住宅給付は Anthropic Usage Policy の high-risk use case（住宅・金融・医療・法律・雇用など個人に直接影響する決定）に該当。したがって D（確定前の qualified human review）が必須制御。また申請者への直接提示時は開示要件も評価する。jailbreak 対策は layered が原則で、single system prompt だけでは不十分（A 誤り）。Anthropic は pre-screening（lightweight model・構造化分類）・既知 injection パターン filter・prompt hardening・反復滥用者の throttle/ban を推奨（C 正解）。B は content moderation guide が「アプリ内ユーザ生成コンテンツのモデレーション」向けで、Claude やり取りの保護には guardrails ガイダンスが正しい参照先である点を誤解。
+
+**参照**: Prep M4「Production Engineering, Evals & Security」（high-risk use case・guardrails・jailbreak mitigation の layered defense）
+
+---
+
+## 復習メモ
+
+- **D5 Tools/MCPs 3問誤答** が最大の弱点。client tool vs server tool vs Skill vs MCP の使い分け（Q22/Q23/Q41）を priority で潰す。
+- **D2 Model Selection 2問**: adaptive thinking 移行（budget_tokens → effort）と cache_control 配置・thinking token 課金を公式 doc で再確認。
+- **複数回答問題の読み違い**: Q34 で thinking display omitted を「コスト削減」と誤読。omitted はレイテンシ最適化のみ。Q50 で guardrails vs content moderation の参照先を混同。
+- **次アクション**: Prep M2 S07（tool-use）・M3 S08（Skills）・M3 S12（MCP）を再読後、Exam3 で D5/D2 を再測定。
