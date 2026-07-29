@@ -16,7 +16,7 @@ LLM を使ったアプリケーション開発の基礎を、自身の理解の�
 
 ## CCAR-P（Architect – Professional）Prep コース和訳
 
-[`ccar-p-prep/`](./ccar-p-prep/) に Claude Certified Architect – Professional Prep コース（Anthropic Partner Academy）の和訳ノートをまとめています。全5モジュール・計107画面。出典・著作権注記はフォルダ内 README を参照。
+[`pro-prep/`](./pro-prep/) に Claude Certified Architect – Professional Prep コース（Anthropic Partner Academy）の和訳ノートをまとめています。全5モジュール・計107画面。出典・著作権注記はフォルダ内 README を参照。
 
 ## 演習問題
 
