@@ -14,6 +14,10 @@ LLM を使ったアプリケーション開発の基礎を、自身の理解の�
 | `modules/module-4.md` | プロダクション運用・評価（eval）・テスト・セキュリティ |
 | `modules/module-5.md` | 再利用化・コントリビューション・デプロイとバージョニング・信頼境界 |
 
+## CCAR-P（Architect – Professional）Prep コース和訳
+
+[`ccar-p-prep/`](./ccar-p-prep/) に Claude Certified Architect – Professional Prep コース（Anthropic Partner Academy）の和訳ノートをまとめています。全5モジュール・計107画面。出典・著作権注記はフォルダ内 README を参照。
+
 ## 演習問題
 
 [`exercises/`](./exercises/) にセルフチェック用のコンテンツをまとめています。
