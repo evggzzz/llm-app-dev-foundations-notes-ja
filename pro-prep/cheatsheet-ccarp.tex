@@ -1,0 +1,230 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[a4paper,margin=3mm,top=2mm,bottom=2mm,head=0pt,foot=0pt,headheight=0pt,headsep=0pt,footskip=0pt]{geometry}
+\usepackage{luatexja}
+\usepackage{luatexja-fontspec}
+\setmainjfont{Hiragino Sans}[BoldFont=Hiragino Sans W6]
+\setsansjfont{Hiragino Sans}[BoldFont=Hiragino Sans W6]
+\usepackage{tcolorbox}
+\tcbuselibrary{skins}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{amssymb}
+\usepackage{array}
+
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0pt}
+\renewcommand{\baselinestretch}{0.92}
+
+\definecolor{cred}{RGB}{180,30,35}
+\definecolor{cblue}{RGB}{25,80,160}
+\definecolor{camber}{RGB}{170,110,10}
+\definecolor{cpurple}{RGB}{90,40,120}
+
+\setlist[itemize]{leftmargin=7pt,itemsep=0pt,topsep=0pt,parsep=0pt,label={$\cdot$}}
+
+\newtcolorbox{boxred}[1]{
+  enhanced,colback=white,colframe=cred,boxrule=0.6pt,arc=1.5pt,
+  left=3pt,right=3pt,top=1pt,bottom=1pt,
+  fonttitle=\bfseries\scriptsize,coltitle=white,colbacktitle=cred,
+  boxsep=0pt,title={#1},before skip=1pt,after skip=1pt
+}
+\newtcolorbox{boxblue}[1]{
+  enhanced,colback=white,colframe=cblue,boxrule=0.6pt,arc=1.5pt,
+  left=3pt,right=3pt,top=1pt,bottom=1pt,
+  fonttitle=\bfseries\scriptsize,coltitle=white,colbacktitle=cblue,
+  boxsep=0pt,title={#1},before skip=1pt,after skip=1pt
+}
+\newtcolorbox{boxamber}[1]{
+  enhanced,colback=white,colframe=camber,boxrule=0.6pt,arc=1.5pt,
+  left=3pt,right=3pt,top=1pt,bottom=1pt,
+  fonttitle=\bfseries\scriptsize,coltitle=white,colbacktitle=camber,
+  boxsep=0pt,title={#1},before skip=1pt,after skip=1pt
+}
+
+\newcommand{\R}[1]{\textcolor{cred}{\textbf{#1}}}
+\newcommand{\B}[1]{\textcolor{cblue}{\textbf{#1}}}
+\newcommand{\stc}{\textcolor{red}{\ensuremath{\bigstar}}\,}
+
+\begin{document}
+\footnotesize
+
+% ===== HEADER: FORMAT REMINDERS (readable sentence) =====
+\begin{tcolorbox}[enhanced,colback=cpurple,colframe=cpurple,boxrule=0.8pt,arc=2pt,
+  left=5pt,right=5pt,top=1pt,bottom=1pt,before skip=0pt,after skip=1pt]
+{\scriptsize\bfseries\color{white} \stc CCAR-P 形式: 全63問・120分・720点(72\%)で合格。「複数選択(select TWO/THREE)」と「シナリオ・マッチング」が本試験特有の形式なので、設問で\B{何個選ぶか}を必ず先に読むこと。紛らわしい選択肢は「何もしない」「表明された制約と矛盾する」など\R{明白に誤り}なので\B{消去法}が効く。API の細部ではなく判断力を問う試験で、実務経験がそのまま通用する。時間は十分(60分で完遂した報告あり)。}
+\end{tcolorbox}
+
+% ===== PAGE 1: 3 COLUMNS — WEAK CORE (D6 / D5 / D1) =====
+\noindent
+\begin{minipage}[t]{0.333\textwidth}
+
+\begin{boxred}{D6 導入ライフサイクル 5 フェーズ \stc (最大弱点)}
+導入は5つのフェーズで進む。各フェーズで「何をするか」「いつ次へ進めるか」を理解する。
+\begin{itemize}
+\item \R{① Discovery(発見)}: ステークホルダーとの「構造化された聞き取り(会話でなく聞き取り)」。相手のビジネス目標を聞き、その背後にある\R{隠れた制約}を設計可能な要件に翻訳する。相手が「シームレスに感じてほしい」と言えば、それは要件でなく「もっと質問が必要」という合図。レイテンシ上限・失敗時の挙動・統合の前提を追及質問で具体化する。出力は\B{翻訳テーブル}(発言・意味する制約・必要な決定・文書化された前提)。
+\item \R{② Design(設計)}: 翻訳した要件をアーキテクチャ決定に変える。トレードオフを提示して、ステークホルダーが\B{決定できる}ようにする(自分で勝手に判決を下すのでない)。
+\item \R{③ Handoff(引継ぎ)}: 決定を文書化する。読者は\B{3種類}(後任エンジニア・コンプライアンス監査人・数ヶ月後に戻る自分)。1人だけ向けなら不完全。棄却された代替案と「なぜその決定か」の根拠が、決定こと自体と同じくらい重要。
+\item \R{④ Monitoring(監視)}: 本番の異常シグナルごとに「誰が・どう動くか」を決めた表(ガバナンス表)を運用する。ダッシュボードで数値を見るだけでは「監視」と呼べず、\B{シグナル→担当者→行動}が繋がって初めて機能する。
+\item \R{⑤ Iteration(反復)}: \B{カレンダー駆動}の定期レビュー。出力監査・データ居住性の再確認・ルール更新を、エラー有無に関わらず定期的に行う。
+\end{itemize}
+\end{boxred}
+
+\begin{boxred}{D6 重要な区別 \stc (混同が誤答の原因)}
+\begin{itemize}
+\item \R{Monitoring $\neq$ Iteration}: Monitoring は本番シグナルのその都度のトリアージ(イベント駆動)。Iteration は定期カレンダーでルール自体を見直す(別物)。
+\item \R{Monitoring $\neq$ Logging}: Monitoring は SLI 指標を計装し「事前にドリフトを捉える」。Logging は事後に記録から再構築する(ユーザー苦情の後)。offline eval やサンプルレビューは\R{ライブドリフトを捉えない}。
+\item \R{前提 $\neq$ 要件}: 要件はステークホルダー発言に遡れる。前提は誰も言及しなかったもの。\B{遡元不能な前提が最も危険}(誰も決定したことを覚えていない)。
+\item \R{トレードオフ3要素}: 得るもの／犠牲／\B{逆転コスト}(後で決定を覆すcost)。逆転コストが最もスキップされ、会議を変える要素。規制環境では4つ目に「コンプライアンス姿勢への影響」を加える。
+\item \R{フィードバックループ}: ライフサイクル全体で前提を\B{再検証し続ける}(recurring)。一度きりのキックオフ承認でない。要件を一度集めて二度と確認しないとドリフト失敗になる。
+\end{itemize}
+\end{boxred}
+
+\end{minipage}\hfill
+\begin{minipage}[t]{0.333\textwidth}
+
+\begin{boxred}{D5 ガバナンス・安全性 3 層 \stc (混同注意)}
+安全性は単一の設定でなく「3層のコントロール」。各層が異なる質問に答えるので、1箇所のフィルタで他をカバーできない。
+\begin{itemize}
+\item \R{第1層: 予防ガードレール(発生前にblock)}: 入力スクリーニング(モデル呼出前)・出力スクリーニング(ユーザ到達前)・\B{ツール呼出承認}(副作用action前)の3点。ツール承認は\B{ほぼ常に決定論的}(許可list+ID+scope)で、監査可能・再生可能。出力スクリーニングは「テキストを判定する」ものでactionは止めないので、副作用は実行\B{前}に別承認が要る。
+\item \R{fail-CLOSED が原則}: 自前のコントロールは障害時に「止める」。fail-open(通す)は「保護の錯覚」を与えつつ何も防がないので、コントロール無しより\R{悪い}。Anthropic 内蔵セーフティは別物で、構成不可・fail-open しない。
+\item \R{第2層: Human-in-the-loop(レビュー routing)}: 人に回す基準は「ボリューム」でなく\R{ステークス}。ステークス=\B{可逆性}+\B{誤決定cost}。
+\item \R{信頼度}は3番目の変数: routing する\B{量}を変えるが、ステークス自体は変えない。\B{較正が必要}(自信を持って間違えうる)。低信頼度×不可逆/高cost → 事前承認。高信頼度×可逆×低cost → 通す。
+\item \R{全件 review は同意疲労}で無意味化(読まずにclick)。レビュアーには\B{入力+出力+flag 理由}を提示。
+\item \R{第3層: 監視・監査(決定 logging)}: 全自動決定を log し、事後説明・オンデマンド再構築を可能にする。\B{log $\neq$ routing}(log=事後説明、routing=誤決定の発効阻止)。
+\end{itemize}
+\end{boxred}
+
+\begin{boxred}{D5 責任スケーリング・公平性 \stc}
+\begin{itemize}
+\item \R{責任あるスケーリング=能力連動}: モデル能力が上がり・action 範囲が広がると、制御も強化し\B{HITL gate を再評価}する。1年前の checklist は自動移行しない。safety は一度の sign-off で終わらない。
+\item \R{バイアス $\neq$ 公平性}: バイアスは\B{測定された歪み(検出)}。公平性は\B{規範+選ばれた定義+執行(解決)}。検出は作業の\B{開始で終了でない}。本番 drift が歪みを再導入するので、\B{サブグループ別の継続監視}が要る。集計精度は不均等な影響を隠す。
+\item \R{error budget=SLO 由来}: 厳しい内部目標(SLO)から算出される予算。\B{SLA(契約)/SLI(生指標)でない}。契約違反前に反応余裕を与える。
+\item \R{success criteria}: \B{多次元・数値閾値・代表 set・部分点採点}。単一の全体精度\% や都合の良い sample は弱 pattern。
+\end{itemize}
+\end{boxred}
+
+\end{minipage}\hfill
+\begin{minipage}[t]{0.333\textwidth}
+
+\begin{boxblue}{D1 パターン選択 \stc (過剰設計を避ける)}
+Claude の関与の「形」は4 pattern。予測可能性とモデル自律性の2軸で選ぶ。
+\begin{itemize}
+\item \R{Augmented LLM(強化された単一呼出)}: 1回の境界ある task。手順は1 pass で制御フローは分岐しない。最速・最安。単発生成・tool 無し/軽微な時に使う。
+\item \R{Workflow(ワークフロー)}: 手順が\B{既知・毎回同一}。code で各 step を配線し、制御フローは code 内(予測可能・log・test 容易)。step を事前に決定でき、誤謬 cost が現実的な時に使う。
+\item \R{Autonomous agent(自律 agent)}: 実行時にモデルが次手順を\B{動的決定}する。制御フローはモデル内。手順を事前列挙\B{できない}時に限る。本番では工具・予算・権限・停止基準で縛る(これらは必須)。
+\item \R{Multi-agent(マルチ agent)}: orchestrator が作業を\B{分解・委任・合成}し、自らは実行しない。各 sub-agent は独立 context で一部を担う。作業が本当に1 context を超える時のみ。
+\end{itemize}
+\end{boxblue}
+
+\begin{boxblue}{D1 過剰設計禁止・ workflow 細形 \stc}
+\begin{itemize}
+\item \R{過剰設計禁止}: 手順が既知なら\R{workflow}(自律 agent でない)。multi-agent の複雑さは\B{「真に異なる専門家」か「並列独立 sub-task」}の時のみ正当化。\B{最も単純}な pattern を選び、測定が不足を示した時のみ昇格する。
+\item \R{workflow 4 細形}: \B{chaining}(線形順次・各段階の出力を次が消費)／\B{routing}(分類器が入力種別で下流 path を切替)／\B{parallelization}(独立 sub-task を同時実行→集約/投票)／\B{evaluator-optimizer}(生成→評価→改訂 loop、基準充足か再試行上限迄)。
+\item \R{5 要素 framework}(順に見て、最初に pattern を除外した要素が決定的): 予測可能性／誤謬 cost／観測性／latency 予算／量での cost。
+\item \R{router 過負荷に注意}: 工具選択精度が選択肢増で低下する時は、1 agent に詰め込むのでなく\R{領域特化 agent} に再編する。
+\end{itemize}
+\end{boxblue}
+
+\begin{boxblue}{D1 分解・委譲の原則}
+\begin{itemize}
+\item 全 job は\B{3 所有者}: Claude(言語理解・草案)／既存 system(決定論的 rule・真実の source)／人(判断・例外・承認)。
+\item \R{Claude への過剰割当が最高 cost の初期 miss}。決定論的 check を model に渡すと、大部分は正しいが稀に間違え、監査まで不可視。
+\item 委譲の判定: \B{可逆性}・\B{stake}・\B{説明責任}の3変数。
+\end{itemize}
+\end{boxblue}
+
+\end{minipage}
+
+% ===== PAGE 2: 3 COLUMNS — INTEGRATION / REGULATORY+D4 / D2+TRAPS =====
+\vspace{1pt}
+\noindent
+\begin{minipage}[t]{0.333\textwidth}
+
+\begin{boxblue}{D3 統合・エントリーポイント \stc (最大配点 19\%)}
+統合層は Claude を企業 system に埋め込む部分。誤ると本番で発覚する。
+\begin{itemize}
+\item \R{コンプライアンス制約が先}: コンプライアンスが、cost や技術の好みの\R{前に} entry point を排除する(他決定の前提)。統合の 5 layer 順: compliance $\to$ identity/SSO $\to$ authz/policy $\to$ data/PII $\to$ observability/audit。
+\item \R{RAG は静的・緩変知識向き}: manual・規制文など。前処理で chunking+indexing し、query 時に関連 chunk を取得する。変更が少ない知識に適する。
+\item \R{RAG は live state に不適}: 在庫・注文 status・価格など刻々変わる値では、取得した snapshot が\B{陳腐化}する(10:00 の正解が 10:05 には誤り)。live state は\B{tool 呼出で真実の source を直接 lookup}する(知識取得と live state を分離するのが定石)。
+\item \R{統合 interface の選択}: \B{Direct API}(完全制御・retry/stream/error 全自前で実装重)／\B{SDK}(便利層・orchestration は自前)／\B{Agent SDK}(managed loop・多 turn 行動向き・単発には不適)／\B{MCP}(統合層を orchestration から分離・\B{1 server/1 owner/1 version})／\B{Claude Code}(開発者向け・製品 backend には不適)。
+\item \R{統合選択の判別}: MCP=多 consumer/発見可能/再利用。Direct API=決定論的・密 scope 呼(発見層不要)。Agent-to-agent=組織 trust 境界越え(各 agent が自 system を媒介)。
+\item \R{identity=server 側注入}: user が主張不可(偽造防止)。server が role や承認済 doc set を system prompt に注入し、既存 authz model が Claude 層も\B{支配}(bypass 禁止)。
+\item \R{最小権限 tool}: 不要 tool は削除。orchestrator-worker は sub-agent 毎に scope。取得 doc/tool 出力は user 入力とは別の\B{第2の injection 経路}なので、user 入力と同様に screen する。
+\end{itemize}
+\end{boxblue}
+
+\begin{boxblue}{D3 retrieval・chunking の要点}
+\begin{itemize}
+\item \R{retrieval vs data shape}: \B{exact ID}→lexical 勝ち(embedding は滲む)・\B{自然言語}→semantic 勝ち。\B{hybrid} が query 形状に戦略を照合。
+\item \R{chunking}: 固定 size は定義/相互参照を切断する。\B{文書構造に整合}させた chunk + linkage metadata。
+\item \R{stale embedding 防止}: 検証済 re-index pipeline + version-aware retrieval(古 chunk が滞留しても serving を阻止)。
+\end{itemize}
+\end{boxblue}
+
+\end{minipage}\hfill
+\begin{minipage}[t]{0.333\textwidth}
+
+\begin{boxamber}{規制・コンプライアンス用語 \stc (用語未習=弱点)}
+規制は「結果」を述べるだけで技術は自分で決める。各義務を\R{control+owner+証拠}に落とす。
+\begin{itemize}
+\item \R{HIPAA}: 米国の健康データ(PHI)。\B{署名済み BAA(Business Associate Agreement)が必須}。BAA は「各当事者の安全策・責任」を定める契約で、これが無ければ\R{技術的にどう作っても非準拠}。BAA は製品単位でなく\B{構成単位}で結ぶ。
+\item \R{GDPR}: EU 個人データ。\B{DPO=Data Protection Officer}(データ保護責任者)。DPA=データ処理契約。越境転送は有効な転送機構があれば合法(EU pin でなくてもよい)。
+\item \R{FedRAMP}: 米国\R{政府 workload}。必要な impact level が必要。直接 API Enterprise は\B{非承認}(Claude for Government / Bedrock GovCloud / Vertex Assured 等、文書化済み承認 route のみ)。
+\item \R{データ居住性(data residency)}: 実行 region を\B{固定}。処理・保存だけでなく、\B{logs/caches/監視/保持 path も境界内}に留める。ログが別 region に書かれて居住性違反になるのが監査落ちの定番。
+\item \R{各義務=control+owner+証拠 artifact}(3点セット)。証拠が無ければ監査で不可視(コントロールが動いたという表明だけは監査人が受け入れない)。
+\item \R{「準拠 route 選択 $\neq$ コンプラ証明」}: route 選択は前提条件であって証拠でない。設定が drift すると設計時は正しかった居住性が本番で静かに偽りになる。
+\end{itemize}
+\end{boxamber}
+
+\begin{boxamber}{D4 評価・失敗判別 \stc (model/prompt/hallucination の判別)}
+品質低下の「原因」を正しく分類しないと、誤った修正が響く。
+\begin{itemize}
+\item 指標: accuracy／\B{hallucination rate}(unsupported 捏造の割合)／latency \B{p95}(中央値でなく末尾 tail)／cost-per-interaction。
+\item \R{model mismatch}: モデルが task に必要な\B{能力を持たない}(能力不足)。fix=\B{model 切替}。より強い model で同じ task が通れば能力起因と確定。
+\item \R{prompt failure}: モデルは\B{能力ある}が prompt が正しい挙動を引き出せない。fix=\B{prompt 修正}。\B{強 model でも同 prompt で失敗}すれば prompt 起因。
+\item \R{hallucination}: 流暢だが\B{事実 unsupported}・捏造。fix=grounding/RAG/citation。確信度は妥当性でない(同じ流暢さで間違える)。
+\item \R{eval=合格基準}: 変更が改善か回帰かを\B{本番前に判定}。\B{1 変数ずつ変更}(bundled は帰属破壊)。trace 分離で retrieval 層 vs model 層を診断。
+\item \R{eval dataset 設計}: \B{real query}(真の入力分布)+\B{構築 edge case}(破綻面)。規制案件は\B{golden set}(専門家 label・典型+高 risk)+\B{adversarial}(攻撃下で境界保持)。
+\item \R{LLM judge}: 主観 quality at scale は judge model が全出力に rubric 適用。\B{定期 human 校正}で judge を正直に保つ。
+\item \R{trace 診断}: code/model/prompt 不変で quality 低下なら原因は\B{流れる物}(入力分布)。\B{drift 分析}(入力変化か?)で retrieval 層 vs model 層を分離診断。
+\item offline 合格 $\neq$ 本番合格(分布が転移しない)。\B{canary} で blast radius を制限し、A/B で本番証拠を得る。
+\end{itemize}
+\end{boxamber}
+
+\end{minipage}\hfill
+\begin{minipage}[t]{0.333\textwidth}
+
+\begin{boxblue}{D2 context・cache}
+\begin{itemize}
+\item \R{prompt cache}: \B{固定 prefix}(system+tools+KB)を先・\B{動量}(per-user/time)を最後。動量を先頭に置くと全 prefix が一意になり\B{hit rate ゼロ}。
+\item cache write=\B{割増}・cache read=\B{大幅割引}。\B{TTL 限定}(永続でない)。
+\item \R{context window=入出力共有予算}(入+出>上限=拒否)。
+\item \R{modular prompts/Skills}: 手順/template の\B{on-demand load}(全積みでない)。重要規則は\B{先頭 or 末尾}に置く(中間埋もれで喪失 = positional attention)。
+\item context window は\B{データ統治境界でない}(access control は別層)。
+\end{itemize}
+\end{boxblue}
+
+\begin{boxamber}{判断トラップ \stc (紛らわしい選択肢の型)}
+\begin{itemize}
+\item 干渉肢の3型: \R{「不要な overhead を加える」}(過剰設計)／「何もしない・誤り容認」／\R{「表明制約と矛盾」}(例: 高影響 action を ungated 残す)。
+\item \R{trade-off は両辺を定量化}(教条でない)。SLA に対し余裕があれば採用+監視。例: 7pt 精度 vs +500ms が SLA 3s なら\B{余裕}→採用。
+\item \R{「新 model $\neq$ 自 task で良い」}→ 全 eval 群+\B{canary}。
+\item \R{「治療前に診断」}: 先に prompt を変えない(真因隠蔽+稼働挙動の不安定化 risk)。trace で先に原因を特定。
+\item \R{指示=security 境界でない}→ system 層で access control(最小権限)。\B{capability $\neq$ injection 免疫}。
+\item 証拠基盤の伝達: quality/rework/規制露出 vs 削減額を\B{量化→推奨→説明責任者が決定}(独断/隠蔽でない)。
+\end{itemize}
+\end{boxamber}
+
+\begin{boxamber}{MCP・orchestration 安全 \stc}
+\begin{itemize}
+\item \R{障害非対称}: orchestrator 障害=\B{回復不能}(全 run 失敗・部分作業が取り残し)。sub-agent 障害=\B{回復可能}(retry/reroute/flag)。
+\item 設計: sub-agent 作業は\B{idempotent+再試行可能}・\B{orchestrator 状態を保護}・\B{共有 trace ID} で end-to-end 再構築。
+\item \R{context 分離}: 各 sub-agent は\B{clean context}+\B{tool access を task に scope}(信頼階層・最小権限)。
+\item 合成時の\B{coverage check}: 返却結果数=配布 unit 数でなければ差を flag(不完全作業の上の自信ある合成が最危険)。
+\end{itemize}
+\end{boxamber}
+
+\end{minipage}
+
+\end{document}

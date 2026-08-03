@@ -18,6 +18,10 @@ LLM を使ったアプリケーション開発の基礎を、自身の理解の�
 
 [`pro-prep/`](./pro-prep/) に Claude Certified Architect – Professional Prep コース（Anthropic Partner Academy）の和訳ノートをまとめています。全5モジュール・計107画面。出典・著作権注記はフォルダ内 README を参照。
 
+**✅ 2026-08-03: CCAR-P 840点合格。** 本ノート（pro-prep）で対策した成果です。
+
+対策用の **チートシート**（`cheatsheet-ccarp.pdf`・A4 2枚）と **英単語帳**（`vocab-ccarp.pdf`・TOEIC750+の50語）も同梱。いずれも本ノート（pro-prep 和訳）と Purcell 練習問題集を基に個人的に再構成した学習メモです（出典: Anthropic Partner Academy CCAR-P Prep・Matthew Purcell 練習問題集）。
+
 ## 演習問題
 
 [`exercises/`](./exercises/) にセルフチェック用のコンテンツをまとめています。
